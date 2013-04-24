@@ -1,2 +1,10 @@
 ### Starting build.
+# Target: src/ocaml_bson.ml.depends, tags: { extension:ml, file:src/ocaml_bson.ml, ocaml, ocamldep, package(batteries), package(camomile), quiet }
+/home/xinuo/.opam/4.00.1/bin/ocamlfind ocamldep -package camomile -package batteries -modules src/ocaml_bson.ml > src/ocaml_bson.ml.depends
+# Target: src/ocaml_bson.cmo, tags: { byte, compile, extension:cmo, extension:ml, file:src/ocaml_bson.cmo, file:src/ocaml_bson.ml, implem, ocaml, package(batteries), package(camomile), quiet }
+/home/xinuo/.opam/4.00.1/bin/ocamlfind ocamlc -c -package camomile -package batteries -I src -o src/ocaml_bson.cmo src/ocaml_bson.ml
+# Target: src/ocaml_bson.cmx, tags: { compile, extension:cmx, extension:ml, file:src/ocaml_bson.cmx, file:src/ocaml_bson.ml, implem, native, ocaml, package(batteries), package(camomile), quiet }
+/home/xinuo/.opam/4.00.1/bin/ocamlfind ocamlopt -c -package camomile -package batteries -I src -o src/ocaml_bson.cmx src/ocaml_bson.ml
+# Target: src/ocaml_bson.native, tags: { dont_link_with, extension:native, file:src/ocaml_bson.native, link, native, ocaml, package(batteries), package(camomile), program, quiet }
+/home/xinuo/.opam/4.00.1/bin/ocamlfind ocamlopt -linkpkg -package camomile -package batteries src/ocaml_bson.cmx -o src/ocaml_bson.native
 # Compilation successful.
