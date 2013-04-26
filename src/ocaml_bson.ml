@@ -1,3 +1,7 @@
+(* 
+   Define the data structure of bson in ocaml.
+   bson in ocaml is actually a Map whose key is string and value is element.
+*)
 module StringMap = Map.Make(struct type t = string let compare = compare end);;
 
 type
@@ -13,7 +17,7 @@ and
   | Double of float
   | String of string
   | Document of document
-  | Array of document list
+  | Array of element list
   | Binary of binary
   | ObjectId of string (* only 12 bytes *)
   | Boolean of bool
@@ -35,34 +39,35 @@ and
   | MD5 of Buffer.t
   | UserDefined of Buffer.t;;
 
-exception Bson_invalid_objectId;;
 
-let is_valid_objectId objectId = 
-  if String.length objectId = 12 then true else false;;
-
+(* create an emapty bson doc *)
 let create_doc () = StringMap.empty;;
 
+(*========================================================================================================*)
+(*
+   All put operations for bson.
+  I write in this way because I believe this way is safer guard for bson types.
+  However, anyway, direct element put is also included.
+*)
 let put ename e doc = StringMap.add ename e doc;;
 
 let put_double ename v doc = put ename (Double v) doc;;
 let put_string ename v doc = put ename (String v) doc;;
 let put_doc ename v doc = put ename (Document v) doc;;
-let put_list ename v doc = 
-  let rec build_doc_list i acc = function 
-    | [] -> acc 
-    | hd::tl -> 
-      let new_doc = put (String.make 1 (Char.chr (i+48))) hd (create_doc()) in
-      build_doc_list (i+1) (new_doc::acc) tl 
-  in 
-  put ename (List.rev (build_doc_list 0 [] v)) doc;;
+let put_list ename v doc = put ename (Array v) doc;;
 let put_generic_binary ename v doc = put ename (Binary (Generic v)) doc;;
 let put_function_binary ename v doc = put ename (Binary (Function v)) doc;;
 let put_uuid_binary ename v doc = put ename (Binary (UUID v)) doc;;
 let put_md5_binary ename v doc = put ename (Binary (MD5 v)) doc;;
 let put_user_binary ename v doc = put ename (Binary (UserDefined v)) doc;;
+
+exception Bson_invalid_objectId;;
+let is_valid_objectId objectId = 
+  if String.length objectId = 12 then true else false;;
 let put_objectId ename v doc = 
   if is_valid_objectId v then put ename (ObjectId v) doc
   else raise Bson_invalid_objectId;;
+
 let put_bool ename v doc = put ename (Boolean v) doc;;
 let put_utc ename v doc = put ename (UTC v) doc;;
 let put_null ename doc = put ename Null doc;;
@@ -77,6 +82,10 @@ let put_maxkey ename doc = put ename MaxKey doc;;
 
 let put_element ename element doc = put ename element doc;;
 
+(*========================================================================================================*)
+(*
+  The coresponding get operations.
+*)
 exception Wrong_bson_type;;
 
 let get_element ename doc = try Some (StringMap.find ename doc) with Not_found -> None;;
@@ -90,18 +99,7 @@ let get extract ename doc =
 let get_double ename doc = get (function (Double v) -> v | _ -> raise Wrong_bson_type) ename doc;;
 let get_string ename doc = get (function (String v) -> v | _ -> raise Wrong_bson_type) ename doc;;
 let get_doc ename doc = get (function (Document v) -> v | _ -> raise Wrong_bson_type) ename doc;;
-let get_list ename doc = 
-  let doc_list = get (function (Array v) -> v | _ -> raise Wrong_bson_type) ename doc in
-  match doc_list with
-    | None -> None
-    | Some dl -> 
-      let rec build_element_list i acc = function
-	| [] -> acc
-	| hd::tl ->
-	  let element = StringMap.find (String.make 1 (Char.chr (i+48))) hd in
-	  build_element_list (i+1) (element::acc) tl
-      in 
-      Some (List.rev (build_element_list 0 [] dl));;
+let get_list ename doc = get (function (Array v) -> v | _ -> raise Wrong_bson_type) ename doc;;
 let get_generic_binary ename doc = get (function (Generic v) -> v | _ -> raise Wrong_bson_type) ename doc;;
 let get_function_binary ename doc = get (function (Function v) -> v | _ -> raise Wrong_bson_type) ename doc;;
 let get_uuid_binary ename doc = get (function (UUID v) -> v | _ -> raise Wrong_bson_type) ename doc;;
@@ -120,15 +118,19 @@ let get_timestamp ename doc = get (function (Timestamp v) -> v | _ -> raise Wron
 let get_minkey ename doc = get (function MinKey -> MinKey | _ -> raise Wrong_bson_type) ename doc;;
 let get_maxkey ename doc = get (function MaxKey -> MaxKey | _ -> raise Wrong_bson_type) ename doc;;
 
-(*let encode_int64 v =
-  let rec convert i acc = 
-    if i > 7 then acc
-    else 
-      let b = Int64.logand 255L (Int64.shift_right v (i*8)) in
-      let acc_move = Int64.shift_left acc (i*8) in
-      convert (i+1) (Int64.logor acc_move b)
-  in 
-  convert 0 0L;;*)
+
+(*========================================================================================================*)
+(*
+  encode int64, int32 and float.
+  note that encoding float is the same as int64, just need to transfer all the bits into an int64.
+
+  The logic is that (e.g., for int32):
+  1) we get an int32
+  2) we shift right 1 byte one by one
+  3) After each shift, we logic and 0000 0000 ... 0000 1111 1111 (255l) with the shifted int32 to get the lower 1 byte
+  4) we convert the int32 to int, so Char.chr can pick it up and convert it to char (byte)
+  5) we put the byte to the buffer (starting from index of 0, since it is little-endian format)
+*)
 
 let encode_int64 v =
   let buf = Buffer.create 8 in
@@ -148,32 +150,114 @@ let encode_int32 v =
   done;
   buf;;
 
+
+(*========================================================================================================*)
 (*
+  encode the doc and element
+
+  I intend to write the encoding/decoding as plain as possible. 
+  There will be quite some redundant code but I guess in this way it is easier to read, especially with bson specification
+*)
+
 let encode doc =
   let add_ename c ename = 
     let buf = Buffer.create 16 in 
     Buffer.add_char buf c; Buffer.add_string buf ename; Buffer.add_char buf '\x00';
     buf
+  in
+  let add_string s =
+    let buf = Buffer.create 16 in
+    Buffer.add_buffer buf (encode_int32 (Int32.of_int (String.length s)));
+    Buffer.add_string buf s;
+    Buffer.add_char buf '\x00';
+    buf
+  in 
+  let add_binary c b = 
+    let buf = Buffer.create 16 in
+    Buffer.add_buffer buf (encode_int32 (Int32.of_int (Buffer.length b)));
+    Buffer.add_char buf c;
+    Buffer.add_buffer buf b;
+    buf
   in 
   let rec encode_doc doc = 
     let encode_element ename element = 
       let buf = Buffer.create 16 in
-      match element with
+      begin match element with
 	| Double v -> 
 	  Buffer.add_buffer buf (add_ename '\x01' ename);
 	  Buffer.add_buffer buf (encode_float v)
 	| String v -> 
 	  Buffer.add_buffer buf (add_ename '\x02' ename);
-	  Buffer.add_buffer buf (encode_int32 (Int32.of_int (String.length v)));
-	  Buffer.add_string buf v;
-	  Buffer.add_char '\x00'
+	  Buffer.add_buffer buf (add_string v)
 	| Document v -> 
 	  Buffer.add_buffer buf (add_ename '\x03' ename);
 	  Buffer.add_buffer buf (encode_doc v)
 	| Array v ->
 	  Buffer.add_buffer buf (add_ename '\x04' ename);
-	  for i = 0 to ((Array.length v)-1) do
-	    Buffer.add_buffer buf (encode_element (Char.chr (i+48)) v.(i))
-	  done
-	| Binary (Generic v) ->
-	  Buffer.add_buffer buf (add_ename '\x05' ename);*)
+	  let rec trans_doc i acc = function (* we need to transform the list to a doc with key as incrementing from '0' *)
+	    | [] -> acc
+	    | hd::tl -> trans_doc (i+1) (put (String.make 1 (Char.chr (i+48))) hd acc) tl;
+	  in 
+	  let new_doc = trans_doc 0 (create_doc()) v in
+	  Buffer.add_buffer buf (encode_doc new_doc)
+	| Binary v ->
+	  Buffer.add_buffer buf (add_ename '\x05' ename);	  
+	  begin match v with
+	    | Generic v -> Buffer.add_buffer buf (add_binary '\x00' v)
+	    | Function v -> Buffer.add_buffer buf (add_binary '\x01' v)
+	    | UUID v -> Buffer.add_buffer buf (add_binary '\x04' v)
+	    | MD5 v -> Buffer.add_buffer buf (add_binary '\x05' v)
+	    | UserDefined v -> Buffer.add_buffer buf (add_binary '\x80' v)
+	  end 
+	| ObjectId v -> 
+	  Buffer.add_buffer buf (add_ename '\x07' ename);
+	  Buffer.add_string buf v
+	| Boolean v ->
+	  Buffer.add_buffer buf (add_ename '\x08' ename);
+	  Buffer.add_char buf (if v then '\x00' else '\x01')
+	| UTC v ->
+	  Buffer.add_buffer buf (add_ename '\x09' ename);
+	  Buffer.add_buffer buf (encode_int64 v)
+	| Null ->
+	  Buffer.add_buffer buf (add_ename '\x0A' ename);
+	| Regex (v1,v2) ->
+	  Buffer.add_buffer buf (add_ename '\x0B' ename);
+	  Buffer.add_string buf v1; Buffer.add_char buf '\x00';
+	  Buffer.add_string buf v2; Buffer.add_char buf '\x00'
+	| JSCode v ->
+	  Buffer.add_buffer buf (add_ename '\x0D' ename);
+	  Buffer.add_buffer buf (add_string v)
+	| JSCodeWS (v, d) ->
+	  Buffer.add_buffer buf (add_ename '\x0F' ename);
+	  let doc_buf = encode_doc d in
+	  Buffer.add_buffer buf (encode_int32 (Int32.of_int ((String.length v) + (Buffer.length doc_buf))));
+	  Buffer.add_buffer buf (add_string v);
+	  Buffer.add_buffer buf doc_buf
+	| Int32 v -> 
+	  Buffer.add_buffer buf (add_ename '\x10' ename);
+	  Buffer.add_buffer buf (encode_int32 v)
+	| Timestamp v -> 
+	  Buffer.add_buffer buf (add_ename '\x11' ename);
+	  Buffer.add_buffer buf (encode_int64 v)
+	| Int64 v -> 
+	  Buffer.add_buffer buf (add_ename '\x12' ename);
+	  Buffer.add_buffer buf (encode_int64 v)
+	| MinKey ->
+	  Buffer.add_buffer buf (add_ename '\xFF' ename)
+	| MaxKey ->
+	  Buffer.add_buffer buf (add_ename '\x7F' ename)
+      end;
+      buf
+    in 
+    let bindings = StringMap.bindings doc in
+    let process_element buf (ename, element) = Buffer.add_buffer buf (encode_element ename element); buf in
+    let e_buf = List.fold_left process_element (Buffer.create 16) bindings in
+    let d_buf = Buffer.create 16 in
+    Buffer.add_buffer d_buf (encode_int32 (Int32.of_int (Buffer.length e_buf)));
+    Buffer.add_buffer d_buf e_buf;
+    Buffer.add_char d_buf '\x00';
+    d_buf
+  in 
+  encode_doc doc;;
+    
+	  

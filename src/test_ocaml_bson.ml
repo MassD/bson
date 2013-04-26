@@ -1,16 +1,18 @@
 open Ocaml_bson;;
-open Batteries;;
+
+let t_buf = Buffer.create 16;;
+Buffer.add_char t_buf 'b';;
 
 let doc0 = create_doc ();;
 let doc1 = put_double "double" 1.0 doc0;;
 let doc2 = put_string "string" "string" doc1;;
 let doc3 = put_doc "doc" (create_doc ()) doc2;;
-let doc4 = put_array "array" (Array.make 18 (create_doc ())) doc3;;
-let doc5 = put_generic_binary "generic" (Array.make 18 'b') doc4;;
-let doc6 = put_function_binary "function" (Array.make 18 'c') doc5;;
-let doc7 = put_uuid_binary "uuid" (Array.make 18 'd') doc6;;
-let doc8 = put_md5_binary "md5" (Array.make 18 'e') doc7;;
-let doc9 = put_user_binary "user" (Array.make 18 'f') doc8;;
+let doc4 = put_list "array" [(String "hello");(String "world")]  doc3;;
+let doc5 = put_generic_binary "generic" t_buf doc4;;
+let doc6 = put_function_binary "function" t_buf doc5;;
+let doc7 = put_uuid_binary "uuid" t_buf doc6;;
+let doc8 = put_md5_binary "md5" t_buf doc7;;
+let doc9 = put_user_binary "user" t_buf doc8;;
 let doc10 = put_objectId "objectId" "123456789123" doc9;;
 let doc11 = put_bool "boolean" true doc10;;
 let doc12 = put_utc "utc" 123L doc11;;
@@ -25,3 +27,5 @@ let doc20 = put_minkey "minkey" doc19;;
 let doc21 = put_maxkey "maxkey" doc20;;
 
 let b = encode_float 5.05;;
+let doc22 = put_string "hello" "world" doc0;;
+let doc22_buf = encode doc22;

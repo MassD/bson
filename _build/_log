@@ -1,10 +1,16 @@
 ### Starting build.
+# Target: src/test_ocaml_bson.ml.depends, tags: { extension:ml, file:src/test_ocaml_bson.ml, ocaml, ocamldep, quiet }
+/home/xinuo/.opam/4.00.1/bin/ocamldep.opt -modules src/test_ocaml_bson.ml > src/test_ocaml_bson.ml.depends
 # Target: src/ocaml_bson.ml.depends, tags: { extension:ml, file:src/ocaml_bson.ml, ocaml, ocamldep, quiet }
-/Users/iamindcs/.opam/4.00.1/bin/ocamldep.opt -modules src/ocaml_bson.ml > src/ocaml_bson.ml.depends
+/home/xinuo/.opam/4.00.1/bin/ocamldep.opt -modules src/ocaml_bson.ml > src/ocaml_bson.ml.depends # cached
 # Target: src/ocaml_bson.cmo, tags: { byte, compile, extension:cmo, extension:ml, file:src/ocaml_bson.cmo, file:src/ocaml_bson.ml, implem, ocaml, quiet }
-/Users/iamindcs/.opam/4.00.1/bin/ocamlc.opt -c -I src -o src/ocaml_bson.cmo src/ocaml_bson.ml
+/home/xinuo/.opam/4.00.1/bin/ocamlc.opt -c -I src -o src/ocaml_bson.cmo src/ocaml_bson.ml # cached
+# Target: src/test_ocaml_bson.cmo, tags: { byte, compile, extension:cmo, extension:ml, file:src/test_ocaml_bson.cmo, file:src/test_ocaml_bson.ml, implem, ocaml, quiet }
+/home/xinuo/.opam/4.00.1/bin/ocamlc.opt -c -I src -o src/test_ocaml_bson.cmo src/test_ocaml_bson.ml
 # Target: src/ocaml_bson.cmx, tags: { compile, extension:cmx, extension:ml, file:src/ocaml_bson.cmx, file:src/ocaml_bson.ml, implem, native, ocaml, quiet }
-/Users/iamindcs/.opam/4.00.1/bin/ocamlopt.opt -c -I src -o src/ocaml_bson.cmx src/ocaml_bson.ml
-# Target: src/ocaml_bson.native, tags: { dont_link_with, extension:native, file:src/ocaml_bson.native, link, native, ocaml, program, quiet }
-/Users/iamindcs/.opam/4.00.1/bin/ocamlopt.opt src/ocaml_bson.cmx -o src/ocaml_bson.native
+/home/xinuo/.opam/4.00.1/bin/ocamlopt.opt -c -I src -o src/ocaml_bson.cmx src/ocaml_bson.ml # cached
+# Target: src/test_ocaml_bson.cmx, tags: { compile, extension:cmx, extension:ml, file:src/test_ocaml_bson.cmx, file:src/test_ocaml_bson.ml, implem, native, ocaml, quiet }
+/home/xinuo/.opam/4.00.1/bin/ocamlopt.opt -c -I src -o src/test_ocaml_bson.cmx src/test_ocaml_bson.ml
+# Target: src/test_ocaml_bson.native, tags: { dont_link_with, extension:native, file:src/test_ocaml_bson.native, link, native, ocaml, program, quiet }
+/home/xinuo/.opam/4.00.1/bin/ocamlopt.opt src/ocaml_bson.cmx src/test_ocaml_bson.cmx -o src/test_ocaml_bson.native
 # Compilation successful.
