@@ -1,5 +1,10 @@
 open Ocaml_bson;;
 
+let print_buffer buf = 
+  let s = Buffer.contents buf in
+  String.iter (fun c -> Printf.printf "\\x%X" (Char.code c)) s;
+  print_endline "";;
+
 let t_buf = Buffer.create 16;;
 Buffer.add_char t_buf 'b';;
 
@@ -28,4 +33,11 @@ let doc21 = put_maxkey "maxkey" doc20;;
 
 let b = encode_float 5.05;;
 let doc22 = put_string "hello" "world" doc0;;
-let doc22_buf = encode doc22;
+let doc22_buf = encode doc22;;
+let _ = print_buffer doc22_buf;;
+
+let l = [(String "awesome"); (Double 5.05); (Double 1986.0)];;
+let doc23 = put_list "BSON" l doc0;;
+let doc23_buf = encode doc23;;
+let _ = print_buffer doc23_buf;;
+

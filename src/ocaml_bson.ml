@@ -167,7 +167,7 @@ let encode doc =
   in
   let add_string s =
     let buf = Buffer.create 16 in
-    Buffer.add_buffer buf (encode_int32 (Int32.of_int (String.length s)));
+    Buffer.add_buffer buf (encode_int32 (Int32.of_int ((String.length s) + 1)));
     Buffer.add_string buf s;
     Buffer.add_char buf '\x00';
     buf
@@ -253,7 +253,8 @@ let encode doc =
     let process_element buf (ename, element) = Buffer.add_buffer buf (encode_element ename element); buf in
     let e_buf = List.fold_left process_element (Buffer.create 16) bindings in
     let d_buf = Buffer.create 16 in
-    Buffer.add_buffer d_buf (encode_int32 (Int32.of_int (Buffer.length e_buf)));
+    Buffer.add_buffer d_buf (encode_int32 (Int32.of_int (5+(Buffer.length e_buf))));
+    print_string "e_buff len = "; print_int (Buffer.length e_buf); print_endline "";
     Buffer.add_buffer d_buf e_buf;
     Buffer.add_char d_buf '\x00';
     d_buf
