@@ -31,12 +31,14 @@ let doc19 = put_timestamp "timestamp" 123L doc18;;
 let doc20 = put_minkey "minkey" doc19;;
 let doc21 = put_maxkey "maxkey" doc20;;
 
+let _ = print_endline "{\"hello\":\"world\"}";;
 let b = encode_float 5.05;;
 let doc22 = put_string "hello" "world" doc0;;
 let doc22_buf = encode doc22;;
 let _ = print_buffer doc22_buf;;
 
-let l = [(String "awesome"); (Double 5.05); (Double 1986.0)];;
+let _ = print_endline "{\"BSON\":[\"awesome\", 5.05, 1986}";;
+let l = [(String "awesome"); (Double 5.05); (Int32 1986l)];;
 let doc23 = put_list "BSON" l doc0;;
 let doc23_buf = encode doc23;;
 let _ = print_buffer doc23_buf;;
