@@ -6,12 +6,6 @@ module StringMap = Map.Make(struct type t = string let compare = compare end);;
 
 type
   document = element StringMap.t
-and
-  byte = char
-and
-  regex = string * string
-and
-  jscode_w_s = string * document
 and 
   element = 
   | Double of float
@@ -23,9 +17,9 @@ and
   | Boolean of bool
   | UTC of int64
   | Null
-  | Regex of regex
+  | Regex of (string * string)
   | JSCode of string
-  | JSCodeWS of jscode_w_s
+  | JSCodeWS of (string * document)
   | Int32 of int32
   | Int64 of int64
   | Timestamp of int64
@@ -41,7 +35,7 @@ and
 
 
 (* create an emapty bson doc *)
-let create_doc () = StringMap.empty;;
+let make () = StringMap.empty;;
 
 (*========================================================================================================*)
 (*
@@ -49,38 +43,37 @@ let create_doc () = StringMap.empty;;
   I write in this way because I believe this way is safer guard for bson types.
   However, anyway, direct element put is also included.
 *)
-let put ename e doc = StringMap.add ename e doc;;
+let add_element ename element doc = StringMap.add ename element doc;;
 
-let put_double ename v doc = put ename (Double v) doc;;
-let put_string ename v doc = put ename (String v) doc;;
-let put_doc ename v doc = put ename (Document v) doc;;
-let put_list ename v doc = put ename (Array v) doc;;
-let put_generic_binary ename v doc = put ename (Binary (Generic v)) doc;;
-let put_function_binary ename v doc = put ename (Binary (Function v)) doc;;
-let put_uuid_binary ename v doc = put ename (Binary (UUID v)) doc;;
-let put_md5_binary ename v doc = put ename (Binary (MD5 v)) doc;;
-let put_user_binary ename v doc = put ename (Binary (UserDefined v)) doc;;
+let create_double v = Double v;;
+let create_string v = String v;;
+let create_doc_element v = Document v;;
+let create_array element_list = Array element_list;;
+
+let create_generic_binary v = Binary (Generic v);;
+let create_function_binary v = Binary (Function v);;
+let create_uuid_binary v = Binary (UUID v);;
+let create_md5_binary v = Binary (MD5 v);;
+let create_user_binary v = Binary (UserDefined v);;
 
 exception Bson_invalid_objectId;;
-let is_valid_objectId objectId = 
-  if String.length objectId = 12 then true else false;;
-let put_objectId ename v doc = 
-  if is_valid_objectId v then put ename (ObjectId v) doc
+let is_valid_objectId objectId = if String.length objectId = 12 then true else false;;
+let create_objectId v = 
+  if is_valid_objectId v then ObjectId v
   else raise Bson_invalid_objectId;;
 
-let put_bool ename v doc = put ename (Boolean v) doc;;
-let put_utc ename v doc = put ename (UTC v) doc;;
-let put_null ename doc = put ename Null doc;;
-let put_regex ename v doc = put ename (Regex v) doc;;
-let put_jscode ename v doc = put ename (JSCode v) doc;;
-let put_jscode_w_s ename v doc = put ename (JSCodeWS v) doc;;
-let put_int32 ename v doc = put ename (Int32 v) doc;;
-let put_int64 ename v doc = put ename (Int64 v) doc;;
-let put_timestamp ename v doc = put ename (Timestamp v) doc;;
-let put_minkey ename doc = put ename MinKey doc;;
-let put_maxkey ename doc = put ename MaxKey doc;;
+let create_bool v = Boolean v;;
+let create_utc v = UTC v;;
+let create_null () = Null;;
+let create_regex s1 s2 = Regex (s1, s2);;
+let create_jscode v = JSCode v;;
+let create_jscode_w_s s doc = JSCodeWS (s, doc);;
+let create_int32 v = Int32 v;;
+let create_int64 v = Int64 v;;
+let create_timestamp v = Timestamp v;;
+let create_minkey () = MinKey;;
+let create_maxkey () = MaxKey;;
 
-let put_element ename element doc = put ename element doc;;
 
 (*========================================================================================================*)
 (*
@@ -88,36 +81,36 @@ let put_element ename element doc = put ename element doc;;
 *)
 exception Wrong_bson_type;;
 
-let get_element ename doc = try Some (StringMap.find ename doc) with Not_found -> None;;
+let get_element ename doc = StringMap.find ename doc;;
 
-let get extract ename doc = 
-  let element = get_element ename doc  in
-  match element with
-    | None -> None
-    | Some e -> Some (extract e);;
+let get_double = function | Double v -> v | _ -> raise Wrong_bson_type;;
+let get_string = function | String v -> v | _ -> raise Wrong_bson_type;;
+let get_doc_element = function | Document v -> v | _ -> raise Wrong_bson_type;;
+let get_list = function | Array v -> v | _ -> raise Wrong_bson_type;;
+let get_generic_binary = function | Generic v -> v | _ -> raise Wrong_bson_type;;
+let get_function_binary = function | Function v -> v | _ -> raise Wrong_bson_type;;
+let get_uuid_binary = function | UUID v -> v | _ -> raise Wrong_bson_type;;
+let get_md5_binary = function | MD5 v -> v | _ -> raise Wrong_bson_type;;
+let get_user_binary = function | UserDefined v -> v | _ -> raise Wrong_bson_type;;
+let get_objectId = function | ObjectId v -> v | _ -> raise Wrong_bson_type;;
+let get_bool = function | Boolean v -> v | _ -> raise Wrong_bson_type;;
+let get_utc = function | UTC v -> v | _ -> raise Wrong_bson_type;;
+let get_null = function | Null -> Null | _ -> raise Wrong_bson_type;;
+let get_regex = function | Regex v -> v | _ -> raise Wrong_bson_type;;
+let get_jscode = function | JSCode v -> v | _ -> raise Wrong_bson_type;;
+let get_jscode_w_s = function | JSCodeWS v -> v | _ -> raise Wrong_bson_type;;
+let get_int32 = function | Int32 v -> v | _ -> raise Wrong_bson_type;;
+let get_int64 = function | Int64 v -> v | _ -> raise Wrong_bson_type;;
+let get_timestamp = function | Timestamp v -> v | _ -> raise Wrong_bson_type;;
+let get_minkey = function | MinKey -> MinKey | _ -> raise Wrong_bson_type;;
+let get_maxkey = function | MaxKey -> MaxKey | _ -> raise Wrong_bson_type;;
 
-let get_double ename doc = get (function (Double v) -> v | _ -> raise Wrong_bson_type) ename doc;;
-let get_string ename doc = get (function (String v) -> v | _ -> raise Wrong_bson_type) ename doc;;
-let get_doc ename doc = get (function (Document v) -> v | _ -> raise Wrong_bson_type) ename doc;;
-let get_list ename doc = get (function (Array v) -> v | _ -> raise Wrong_bson_type) ename doc;;
-let get_generic_binary ename doc = get (function (Generic v) -> v | _ -> raise Wrong_bson_type) ename doc;;
-let get_function_binary ename doc = get (function (Function v) -> v | _ -> raise Wrong_bson_type) ename doc;;
-let get_uuid_binary ename doc = get (function (UUID v) -> v | _ -> raise Wrong_bson_type) ename doc;;
-let get_md5_binary ename doc = get (function (MD5 v) -> v | _ -> raise Wrong_bson_type) ename doc;;
-let get_user_binary ename doc = get (function (UserDefined v) -> v | _ -> raise Wrong_bson_type) ename doc;;
-let get_objectId ename doc = get (function (ObjectId v) -> v | _ -> raise Wrong_bson_type) ename doc;;
-let get_bool ename doc = get (function (Boolean v) -> v | _ -> raise Wrong_bson_type) ename doc;;
-let get_utc ename doc = get (function (UTC v) -> v | _ -> raise Wrong_bson_type) ename doc;;
-let get_null ename doc = get (function Null -> Null | _ -> raise Wrong_bson_type) ename doc;;
-let get_regex ename doc = get (function (Regex v) -> v | _ -> raise Wrong_bson_type) ename doc;;
-let get_jscode ename doc = get (function (JSCode v) -> v | _ -> raise Wrong_bson_type) ename doc;;
-let get_jscode_w_s ename doc = get (function (JSCodeWS v) -> v | _ -> raise Wrong_bson_type) ename doc;;
-let get_int32 ename doc = get (function (Int32 v) -> v | _ -> raise Wrong_bson_type) ename doc;;
-let get_int64 ename doc = get (function (Int64 v) -> v | _ -> raise Wrong_bson_type) ename doc;;
-let get_timestamp ename doc = get (function (Timestamp v) -> v | _ -> raise Wrong_bson_type) ename doc;;
-let get_minkey ename doc = get (function MinKey -> MinKey | _ -> raise Wrong_bson_type) ename doc;;
-let get_maxkey ename doc = get (function MaxKey -> MaxKey | _ -> raise Wrong_bson_type) ename doc;;
+(*========================================================================================================*)
+(*
+  The remove  operations.
+*)
 
+let remove_element ename doc = StringMap.remove ename doc;;
 
 (*========================================================================================================*)
 (*
@@ -196,9 +189,9 @@ let encode doc =
 	  Buffer.add_buffer buf (add_ename '\x04' ename);
 	  let rec trans_doc i acc = function (* we need to transform the list to a doc with key as incrementing from '0' *)
 	    | [] -> acc
-	    | hd::tl -> trans_doc (i+1) (put (String.make 1 (Char.chr (i+48))) hd acc) tl;
-	  in 
-	  let new_doc = trans_doc 0 (create_doc()) v in
+	    | hd::tl -> trans_doc (i+1) (add_element (String.make 1 (Char.chr (i+48))) hd acc) tl;
+	  in
+	  let new_doc = trans_doc 0 (make()) v in
 	  Buffer.add_buffer buf (encode_doc new_doc)
 	| Binary v ->
 	  Buffer.add_buffer buf (add_ename '\x05' ename);	  
@@ -254,7 +247,7 @@ let encode doc =
     let e_buf = List.fold_left process_element (Buffer.create 16) bindings in
     let d_buf = Buffer.create 16 in
     Buffer.add_buffer d_buf (encode_int32 (Int32.of_int (5+(Buffer.length e_buf))));
-    print_string "e_buff len = "; print_int (Buffer.length e_buf); print_endline "";
+    (*print_string "e_buff len = "; print_int (Buffer.length e_buf); print_endline "";*)
     Buffer.add_buffer d_buf e_buf;
     Buffer.add_char d_buf '\x00';
     d_buf
