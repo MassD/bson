@@ -2,7 +2,7 @@ open Ocaml_bson;;
 
 let print_buffer buf = 
   let s = Buffer.contents buf in
-  String.iter (fun c -> let k = Char.code c in if k < 16 then Printf.printf "\\x0%X" k else Printf.printf "\\x%X" k) s;
+  String.iter (fun c -> Printf.printf "\\x2.2%X" (Char.code c)) s;
   print_endline "";;
 
 let t_buf = Buffer.create 16;;

@@ -27,11 +27,11 @@ and
   | MaxKey
 and
   binary =
-  | Generic of Buffer.t
-  | Function of Buffer.t
-  | UUID of Buffer.t
-  | MD5 of Buffer.t
-  | UserDefined of Buffer.t;;
+  | Generic of string
+  | Function of string
+  | UUID of string
+  | MD5 of string
+  | UserDefined of string;;
 
 
 (* create an emapty bson doc *)
@@ -39,9 +39,10 @@ let make () = StringMap.empty;;
 
 (*========================================================================================================*)
 (*
-   All put operations for bson.
-  I write in this way because I believe this way is safer guard for bson types.
-  However, anyway, direct element put is also included.
+  for constructing a document
+  1. we make a empty document
+  2. we create element as we want
+  3. we add the element to the document, with a element name
 *)
 let add_element ename element doc = StringMap.add ename element doc;;
 
@@ -77,7 +78,9 @@ let create_maxkey () = MaxKey;;
 
 (*========================================================================================================*)
 (*
-  The coresponding get operations.
+  for using a document
+  1. we get an element from document, if existing
+  2. we get the value of the element
 *)
 exception Wrong_bson_type;;
 
@@ -149,7 +152,7 @@ let encode_int32 v =
   encode the doc and element
 
   I intend to write the encoding/decoding as plain as possible. 
-  There will be quite some redundant code but I guess in this way it is easier to read, especially with bson specification
+  There will be quite some redundant code but I guess in this way it is easier to read, especially to mapping to bson specification
 *)
 
 let encode doc =
@@ -167,9 +170,9 @@ let encode doc =
   in 
   let add_binary c b = 
     let buf = Buffer.create 16 in
-    Buffer.add_buffer buf (encode_int32 (Int32.of_int (Buffer.length b)));
+    Buffer.add_buffer buf (encode_int32 (Int32.of_int (String.length b)));
     Buffer.add_char buf c;
-    Buffer.add_buffer buf b;
+    Buffer.add_string buf b;
     buf
   in 
   let rec encode_doc doc = 
@@ -253,5 +256,111 @@ let encode doc =
     d_buf
   in 
   encode_doc doc;;
-    
-	  
+
+
+(*========================================================================================================*)
+(*
+  decode int64, int32 and float.
+  note that decoding float is the same as int64, just need to transfer all the bits from int64 into a float.
+
+  The logic is that (e.g., for int32):
+  1) we get a buf and create a desired placeholder of int32: 0l
+  2) start from the rightmost of the buf (index=3), we get a byte and this byte is the high byte of the desired int32
+  3) we shift_left the placehold, so the early coming bytes will move higher
+  4) we then do logor between the high byte and placeholder, so the result becomes the new placeholder as it now contains the high byte in lower
+*)
+let decode_int64 str =
+  let rec decode i acc =
+    if i < 0 then acc
+    else
+      let high_byte = Char.code str.[i] in
+      let high_int64 = Int64.of_int high_byte in
+      let shift_acc = Int64.shift_left acc 8 in
+      let new_acc = Int64.logor high_int64 shift_acc in 
+      decode (i-1) new_acc
+  in decode 7 0L;;
+
+let decode_float str = Int64.float_of_bits(decode_int64 str);;
+
+let decode_int32 str = 
+  let rec decode i acc =
+    if i < 0 then acc
+    else
+      let high_byte = Char.code str.[i] in
+      let high_int32 = Int32.of_int high_byte in
+      let shift_acc = Int32.shift_left acc 8 in
+      let new_acc = Int32.logor high_int32 shift_acc in 
+      decode (i-1) new_acc
+  in decode 3 0l;;
+ 
+exception MalformedBSON;;
+
+let rec find_x00 buf cur =
+      if cur >= Buffer.length buf then -1
+      else begin if (Buffer.nth buf cur) = '\x00' then cur else find_x00 buf (cur+1) end;;
+	
+let decode_ename buf cur = 
+  let x00 = find_x00 buf cur in
+  if x00 = -1 then raise MalformedBSON
+  else (Buffer.sub buf cur (x00-cur), x00+1)
+
+let decode_double buf cur = ((Double (decode_float (Buffer.sub buf cur 8))), (cur+8));;
+
+let decode_string buf cur = 
+  let len = Int32.to_int (decode_int32 (Buffer.sub buf cur 4)) in
+  let x00 = find_x00 buf (cur+4) in
+  if len <> x00-(cur+4)+1 then raise MalformedBSON
+  else ((String (Buffer.sub buf (cur+4) len)), x00+1);;
+
+let buffer_of_string str = let buf = Buffer.create 16 in Buffer.add_string buf str; buf;;
+
+let decode_binary buf cur = 
+  let len = Int32.to_int (decode_int32(Buffer.sub buf cur 4)) in
+  let c = Buffer.nth buf (cur+4) in
+  let b = Buffer.sub buf (cur+5) len in
+  let new_cur = cur+5+len in
+  match c with
+    | '\x00' -> ((Generic b), new_cur)
+    | '\x01' -> ((Function b), new_cur)
+    | '\x04' -> ((UUID b), new_cur)
+    | '\x05' -> ((MD5 b), new_cur)
+    | '\x80' -> ((UserDefined b), new_cur)
+    | _ -> raise MalformedBSON;;
+
+let decode_objectId buf cur = ((ObjectId (Buffer.sub buf cur 12)), (cur+12));;
+
+let decode_boolean buf cur = ((if (Buffer.nth buf cur) = '\x00' then (Boolean true) else (Boolean false)), (cur+1));;
+
+let decode_utc buf cur = ((UTC (decode_int64 (Buffer.sub buf cur 8))), (cur+8));;
+
+(*let decode_regex buf cur = *)
+  
+
+(*let decode_document buf cur =
+  
+
+let decode buf =
+  let elist_start = 4 and elist_end = Buffer.length buf in
+  let rec decode_element buf cur doc = 
+    if cur >= elist_end then doc
+    else 
+      let header = Buffer.nth buf cur 1 in
+      match header with
+	| '\x01' -> *)
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
