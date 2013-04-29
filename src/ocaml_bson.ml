@@ -1,3 +1,4 @@
+
 (* 
    Define the data structure of bson in ocaml.
    bson in ocaml is actually a Map whose key is string and value is element.
@@ -6,6 +7,7 @@ module StringMap = Map.Make(struct type t = string let compare = compare end);;
 
 type
   document = element StringMap.t
+and t = document
 and 
   element = 
   | Double of float
