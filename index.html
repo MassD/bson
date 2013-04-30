@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
+
+    <title>Bson.ml by MassD</title>
+  </head>
+
+  <body>
+
+    <header>
+      <div class="container">
+        <h1>Bson.ml</h1>
+        <h2>An ocaml implementation for BSON</h2>
+
+        <section id="downloads">
+          <a href="https://github.com/MassD/ocaml_bson/zipball/master" class="btn">Download as .zip</a>
+          <a href="https://github.com/MassD/ocaml_bson/tarball/master" class="btn">Download as .tar.gz</a>
+          <a href="https://github.com/MassD/ocaml_bson" class="btn btn-github"><span class="icon"></span>View on GitHub</a>
+        </section>
+      </div>
+    </header>
+
+    <div class="container">
+      <section id="main_content">
+        <h1>Bson.ml</h1>
+
+<p><strong>Bson.ml</strong> is an ocaml implementation for MongoDB BSON format. </p>
+
+<p>It includes a Bson document data structure to be used with ocmal, together with BSON's encoding (to bytes) and decoding (from bytes). </p>
+
+<h3>Usage in a functional way</h3>
+
+<p>The logic of <strong>usage</strong> is like this</p>
+
+<ol>
+<li>Create an empty Bson document</li>
+<li>Create the elements you want</li>
+<li>Add elements to the document with names</li>
+<li>Or remove elements from the document via the names</li>
+<li>Get elements from the document via the names</li>
+<li>After obtaining an element, get the raw value from the element</li>
+</ol><p>The functions inside this module seem to be many, however, most of them are just for creating elements. These functions are to <em>hide the implementation details of the type elements</em>. Also, in this way, the Bson document can be used more safely.</p>
+
+<h3>Taste Bson.ml</h3>
+
+<p>In order to taste Bson.ml, please have a look at test/test_bson.ml. 
+You can use the following command in the root of the project to run it:</p>
+
+<pre><code>ocamlbuild -I src test/test_ocaml_bson.native
+./test_ocaml_bson.native 
+</code></pre>
+
+<h3>Further information</h3>
+
+<p>Please refer to the <a href="http://bsonspec.org/#/specification">Official Bson specification</a> for more information.</p>
+
+<hr><p>The current version is 0.88.0</p>
+
+<p>Yes, I would like to call this utility as Bson.ml instead of ocamlbson, or something like that.</p>
+
+<p>In addition, experienced ocaml developers are welcomed to improve the code base</p>
+      </section>
+    </div>
+
+    
+  </body>
+</html>
