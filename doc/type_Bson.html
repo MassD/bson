@@ -23,7 +23,6 @@
 &nbsp;&nbsp;<span class="keyword">val</span>&nbsp;remove_element&nbsp;:&nbsp;string&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Bson</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Bson</span>.t<br>
 &nbsp;&nbsp;<span class="keyword">val</span>&nbsp;encode&nbsp;:&nbsp;<span class="constructor">Bson</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;string<br>
 &nbsp;&nbsp;<span class="keyword">val</span>&nbsp;decode&nbsp;:&nbsp;string&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Bson</span>.t<br>
-&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;to_simple_json&nbsp;:&nbsp;<span class="constructor">Bson</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;string<br>
 &nbsp;&nbsp;<span class="keyword">val</span>&nbsp;create_double&nbsp;:&nbsp;float&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Bson</span>.element<br>
 &nbsp;&nbsp;<span class="keyword">val</span>&nbsp;create_string&nbsp;:&nbsp;string&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Bson</span>.element<br>
 &nbsp;&nbsp;<span class="keyword">val</span>&nbsp;create_doc_element&nbsp;:&nbsp;<span class="constructor">Bson</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Bson</span>.element<br>
@@ -61,4 +60,5 @@
 &nbsp;&nbsp;<span class="keyword">val</span>&nbsp;get_timestamp&nbsp;:&nbsp;<span class="constructor">Bson</span>.element&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int64<br>
 &nbsp;&nbsp;<span class="keyword">val</span>&nbsp;get_minkey&nbsp;:&nbsp;<span class="constructor">Bson</span>.element&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Bson</span>.empty<br>
 &nbsp;&nbsp;<span class="keyword">val</span>&nbsp;get_maxkey&nbsp;:&nbsp;<span class="constructor">Bson</span>.element&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Bson</span>.empty<br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;to_simple_json&nbsp;:&nbsp;<span class="constructor">Bson</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;string<br>
 <span class="keyword">end</span></code></body></html>
