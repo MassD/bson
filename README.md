@@ -24,5 +24,7 @@ Please also refer to the [Official Bson specification](http://bsonspec.org/#/spe
 
 *Version 0.88.0* 
 
-*(Yes, I would like to call this utility as Bson.ml instead of ocamlbson, or something like that)*
+*Yes, I would like to call this utility as Bson.ml instead of ocamlbson, or something like that.* 
+
+*In addition, experienced ocaml developers are welcomed to improve the code base*
 
