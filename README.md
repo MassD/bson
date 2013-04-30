@@ -13,7 +13,8 @@ The logic of **usage** is like this
 
 The functions inside this module seem to be many, however, most of them are just for creating elements. These functions are to *hide the implementation details of the type elements*. Also, in this way, the Bson document can be used more safely.
 
-	In order to taste Bson.ml, please have a look at test/test_bson.ml. You can use the following command in the root of the project to run it:
+	In order to taste Bson.ml, please have a look at test/test_bson.ml. 
+    You can use the following command in the root of the project to run it:
 
 	ocamlbuild -I src test/test_ocaml_bson.native
 	./test_ocaml_bson.native 
