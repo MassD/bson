@@ -23,12 +23,8 @@ sig
   val create_doc_element : t -> element;;
   val create_list : element list -> element;;
   
-  val create_generic_binary : string -> element;;
-  val create_function_binary : string -> element;;
-  val create_uuid_binary : string -> element;;
-  val create_md5_binary : string -> element;;
   val create_user_binary : string -> element;;
-  
+ 
   val create_objectId : string -> element;;
   val create_boolean : bool -> element;;
   val create_utc : int64 -> element;;
@@ -38,9 +34,15 @@ sig
   val create_jscode_w_s : string -> t -> element;;
   val create_int32 : int32 -> element;;
   val create_int64 : int64 -> element;;
-  val create_timestamp : int64 -> element;;
+  
   val create_minkey : unit -> element;;
   val create_maxkey : unit -> element;;
+  
+  (*val create_generic_binary : string -> element;;
+  val create_function_binary : string -> element;;
+  val create_uuid_binary : string -> element;;
+  val create_md5_binary : string -> element;;
+  val create_timestamp : int64 -> element;;*)
    
   val get_element : string -> t -> element;;
   
@@ -70,7 +72,14 @@ sig
 
   val remove_element : string -> t -> t;;
 
+  (*val all_elements : t -> (string * element) list;;*)
+
+
   val encode : t -> string;;
+
+  val decode : string -> t;;
+
+  val to_json : t -> string;;
 end;;
 
 module Bson : BsonSig =
@@ -193,6 +202,8 @@ struct
   *)
 
   let remove_element ename doc = StringMap.remove ename doc;;
+
+  let all_elements doc = StringMap.bindings doc;;
 
   (*
   encode int64, int32 and float.
@@ -347,13 +358,14 @@ struct
 
   let decode_float str cur = 
     let (i, new_cur) = decode_int64 str cur in
-    (Int64.to_float i, new_cur);;
+    (Int64.float_of_bits i, new_cur);;
 
   let decode_int32 str cur = 
     let rec decode i acc =
-      if i < 0 then acc
+      if i < cur then acc
       else
 	let high_byte = Char.code str.[i] in
+	(*print_int high_byte;print_endline "";*)
 	let high_int32 = Int32.of_int high_byte in
 	let shift_acc = Int32.shift_left acc 8 in
 	let new_acc = Int32.logor high_int32 shift_acc in 
@@ -379,8 +391,11 @@ struct
 
   let decode_string str cur =
     let (len, next_cur) = decode_len str cur in
+    (*print_string "cur=";print_int cur;print_string ";";
+    print_string "len=";print_int len;
+    print_endline "";*)
     let x00 = next_x00 str next_cur in
-    if len - 1 <> x00-next_cur then raise Malformed_bson
+    if len - 1 <> x00-next_cur then raise Wrong_string
     else (String.sub str next_cur (len-1), x00+1);;
 
   let doc_to_list doc = (* we need to transform a doc with key as incrementing from '0' to a list *)
@@ -421,10 +436,12 @@ struct
       let c = str.[cur] in
       let next_cur = cur+1 in
       let (ename, next_cur) = decode_ename str next_cur in 
+      (*print_endline ename;*)
       let (element, next_cur) = 
 	match c with
 	  | '\x01' -> decode_double str next_cur
 	  | '\x02' -> 
+	    (*print_endline "decoding string...";*)
 	    let (s, next_cur) = decode_string str next_cur in
 	    (String s, next_cur)
 	  | '\x03' -> 
@@ -471,7 +488,48 @@ struct
       let (doc, des) = decode_elements next_cur acc in
       if des - cur <> len then raise Malformed_bson
       else (doc, des)
-    in decode_doc str 0;;
-      
+    in let (doc, _) = decode_doc str 0 in doc;;
+     
+  (*
+    Not that this bson to json conversion is far from completion.
+    It is used to help the test verification and can handle only simple objects.
+  *)
+  let to_json doc =
+    let rec el_to_sl el = 
+      List.rev (List.fold_left (fun acc e -> (e_to_s e)::acc) [] el)
+    and e_to_s = function
+      | Double v -> string_of_float v
+      | String v -> "\"" ^ v ^ "\""
+      | Document v -> d_to_s v
+      | Array v -> let sl = el_to_sl v in "[" ^ (String.concat ", " sl) ^ "]"
+      | Binary v ->
+	begin match v with
+	  | Generic v | Function v | UUID v | MD5 v | UserDefined v -> "\"" ^ v ^ "\""
+	end 
+      | ObjectId v -> "\"" ^ v ^ "\""
+      | Boolean v -> if v then "\"true\"" else "\"false\""
+      | UTC v -> Int64.to_string v
+      | Null NULL-> "\"null\""
+      | Regex (v1,v2) -> "(\"" ^ v1 ^ ", \"" ^ v2 ^ "\")"
+      | JSCode v -> "\"" ^ v ^ "\""
+      | JSCodeWS (v, d) -> "(\"" ^ v ^ ", \"" ^ (d_to_s d) ^ "\")"
+      | Int32 v -> Int32.to_string v
+      | Timestamp v -> Int64.to_string v
+      | Int64 v -> Int64.to_string v
+      | MinKey MINKEY -> "\"minkey\""
+      | MaxKey MAXKEY -> "\"maxkey\""
+      | _ -> raise Malformed_bson
+    and d_to_s d = 
+      let buf = Buffer.create 16 in
+      Buffer.add_string buf "{";
+      let bindings = StringMap.bindings d in
+      let process acc (ename, element) = 
+	("\"" ^ ename ^ "\" : " ^ (e_to_s element)) :: acc;
+      in 
+      Buffer.add_string buf (String.concat ", " (List.rev (List.fold_left process [] bindings)));
+      Buffer.add_string buf "}";
+      Buffer.contents buf
+    in 
+    d_to_s doc;;
       
 end;;
