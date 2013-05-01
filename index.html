@@ -49,6 +49,16 @@
 <li>After obtaining an element, get the raw value from the element</li>
 </ol><p>The functions inside this module seem to be many, however, most of them are just for creating elements. These functions are to <em>hide the implementation details of the type elements</em>. Also, in this way, the Bson document can be used more safely.</p>
 
+<hr><h3>Sample code</h3>
+
+<pre><code>let doc = Bson.make ();;
+let element = Bson.create_string "world";;
+let new_doc = Bson.add_element "hello" element doc;;
+
+let encoded_bytes = Bson.encode new_doc;;
+let decoded_doc = Bson.decode encoded_bytes;;
+</code></pre>
+
 <hr><h3>Taste Bson.ml</h3>
 
 <p>In order to taste Bson.ml, please have a look at test/test_bson.ml. 
