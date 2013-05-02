@@ -1,0 +1,12 @@
+### Starting build.
+# Target: src/bson.mli.depends, tags: { extension:mli, file:src/bson.mli, ocaml, ocamldep, quiet }
+/home/xinuo/.opam/4.00.1/bin/ocamldep.opt -modules src/bson.mli > src/bson.mli.depends # cached
+# Target: src/bson.cmi, tags: { byte, compile, extension:mli, file:src/bson.mli, interf, ocaml, quiet }
+/home/xinuo/.opam/4.00.1/bin/ocamlc.opt -c -I src -o src/bson.cmi src/bson.mli # cached
+# Target: src/bson.ml.depends, tags: { extension:ml, file:src/bson.ml, ocaml, ocamldep, quiet }
+/home/xinuo/.opam/4.00.1/bin/ocamldep.opt -modules src/bson.ml > src/bson.ml.depends # cached
+# Target: src/bson.cmo, tags: { byte, compile, extension:cmo, extension:ml, file:src/bson.cmo, file:src/bson.ml, implem, ocaml, quiet }
+/home/xinuo/.opam/4.00.1/bin/ocamlc.opt -c -I src -o src/bson.cmo src/bson.ml
+# Target: src/bson.byte, tags: { byte, dont_link_with, extension:byte, file:src/bson.byte, link, ocaml, program, quiet }
+/home/xinuo/.opam/4.00.1/bin/ocamlc.opt src/bson.cmo -o src/bson.byte
+# Compilation successful.
