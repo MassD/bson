@@ -41,7 +41,7 @@ If you want to directly use it as a library via ocamlfind, please do
 ###Misc
 Please also refer to the [Official Bson specification](http://bsonspec.org/#/specification) for more information.
 
-*Version 0.88.0* 
+*Version 0.88.1* 
 
 *Yes, I would like to call this utility as Bson.ml instead of ocamlbson, or something like that.* 
 
