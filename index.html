@@ -68,9 +68,20 @@ You can use the following command in the root of the project to run it:</p>
 ./test_bson.native 
 </code></pre>
 
+<hr><h3>Ocamlfind support</h3>
+
+<p>The META file is supplied in the root of project. Also the _build folder is provided together with the source.</p>
+
+<p>If you want to directly use it as a library via ocamlfind, please do</p>
+
+<pre><code>ocamlfind install bson META _build/src/bson.cmo _build/src/bson.cmx src/bson.mli
+</code></pre>
+
 <hr><h3>Further information</h3>
 
 <p>Please refer to the <a href="http://bsonspec.org/#/specification">Official Bson specification</a> for more information.</p>
+
+<p>Please refer to <a href="http://stackoverflow.com/a/8665591/298143">this excellent answer</a> for more information about "how to let ocamlfind to find your lib"</p>
 
 <hr><p>The current version is 0.88.0</p>
 
