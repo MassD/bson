@@ -30,6 +30,14 @@ You can use the following command in the root of the project to run it:
 	ocamlbuild -I src test/test_bson.native
 	./test_bson.native 
 
+###Ocamlfind support
+
+The META file is supplied in the root of project. Also the _build folder is provided together with the source.
+
+If you want to directly use it as a library via ocamlfind, please do
+
+	ocamlfind install bson META _build/src/bson.cmo _build/src/bson.cmx src/bson.mli
+
 ###Misc
 Please also refer to the [Official Bson specification](http://bsonspec.org/#/specification) for more information.
 
