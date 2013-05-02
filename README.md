@@ -36,7 +36,8 @@ The META file is supplied in the root of project. Also the _build folder is prov
 
 If you want to directly use it as a library via ocamlfind, please do
 
-	ocamlfind install bson META _build/src/bson.cmo _build/src/bson.cmx src/bson.mli
+	ocamlfind install bson META _build/src/bson.cmx _build/src/bson.cmo _build/src/bson.cmi _build/src/bson.o
+
 
 ###Misc
 Please also refer to the [Official Bson specification](http://bsonspec.org/#/specification) for more information.
