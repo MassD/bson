@@ -46,6 +46,9 @@ type element;;
 (** Create an empty Bson document *)
 val make : unit -> t;;
 
+(** Check whether this Bson document empty or not *)
+val is_empty: t -> bool;;
+
 (** Create an empty Bson document *)
 val add_element : string -> element -> t -> t;;
 

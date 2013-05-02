@@ -18,6 +18,7 @@
 &nbsp;&nbsp;<span class="keyword">type</span>&nbsp;empty&nbsp;=&nbsp;<span class="constructor">NULL</span>&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">MINKEY</span>&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">MAXKEY</span><br>
 &nbsp;&nbsp;<span class="keyword">type</span>&nbsp;element<br>
 &nbsp;&nbsp;<span class="keyword">val</span>&nbsp;make&nbsp;:&nbsp;unit&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Bson</span>.t<br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;is_empty&nbsp;:&nbsp;<span class="constructor">Bson</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;bool<br>
 &nbsp;&nbsp;<span class="keyword">val</span>&nbsp;add_element&nbsp;:&nbsp;string&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Bson</span>.element&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Bson</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Bson</span>.t<br>
 &nbsp;&nbsp;<span class="keyword">val</span>&nbsp;get_element&nbsp;:&nbsp;string&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Bson</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Bson</span>.element<br>
 &nbsp;&nbsp;<span class="keyword">val</span>&nbsp;remove_element&nbsp;:&nbsp;string&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Bson</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Bson</span>.t<br>

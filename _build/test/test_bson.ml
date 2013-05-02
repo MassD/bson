@@ -6,6 +6,9 @@ let bin = "12345";;
 
 let doc0 = Bson.make ();;
 
+let _ = 
+  print_string "doc0 is "; 
+  print_endline (if Bson.is_empty doc0 then "empty" else "not empty");;
 
 let e1 = Bson.create_double 1.0;;
 let doc1 = Bson.add_element "Double" e1 doc0;;

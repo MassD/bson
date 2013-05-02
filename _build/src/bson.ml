@@ -39,6 +39,8 @@ and binary =
   
 let make () = StringMap.empty;;
 
+let is_empty = StringMap.is_empty;;
+
 (*
   for constructing a document
   1. we make a empty document
