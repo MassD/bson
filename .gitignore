@@ -11,3 +11,4 @@
 *.mli#
 *.native
 DS_Store
+*.byte

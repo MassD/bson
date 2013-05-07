@@ -1,18 +1,18 @@
 ### Starting build.
 # Target: test/test_bson.ml.depends, tags: { extension:ml, file:test/test_bson.ml, ocaml, ocamldep, quiet }
-/Users/iamindcs/.opam/4.00.1/bin/ocamldep.opt -modules test/test_bson.ml > test/test_bson.ml.depends # cached
+/home/xinuo/.opam/4.00.1/bin/ocamldep.opt -modules test/test_bson.ml > test/test_bson.ml.depends
 # Target: src/bson.mli.depends, tags: { extension:mli, file:src/bson.mli, ocaml, ocamldep, quiet }
-/Users/iamindcs/.opam/4.00.1/bin/ocamldep.opt -modules src/bson.mli > src/bson.mli.depends # cached
+/home/xinuo/.opam/4.00.1/bin/ocamldep.opt -modules src/bson.mli > src/bson.mli.depends # cached
 # Target: src/bson.cmi, tags: { byte, compile, extension:mli, file:src/bson.mli, interf, ocaml, quiet }
-/Users/iamindcs/.opam/4.00.1/bin/ocamlc.opt -c -I src -o src/bson.cmi src/bson.mli # cached
+/home/xinuo/.opam/4.00.1/bin/ocamlc.opt -c -I src -o src/bson.cmi src/bson.mli # cached
 # Target: test/test_bson.cmo, tags: { byte, compile, extension:cmo, extension:ml, file:test/test_bson.cmo, file:test/test_bson.ml, implem, ocaml, quiet }
-/Users/iamindcs/.opam/4.00.1/bin/ocamlc.opt -c -I test -I src -o test/test_bson.cmo test/test_bson.ml
+/home/xinuo/.opam/4.00.1/bin/ocamlc.opt -c -I test -I src -o test/test_bson.cmo test/test_bson.ml
 # Target: src/bson.ml.depends, tags: { extension:ml, file:src/bson.ml, ocaml, ocamldep, quiet }
-/Users/iamindcs/.opam/4.00.1/bin/ocamldep.opt -modules src/bson.ml > src/bson.ml.depends # cached
+/home/xinuo/.opam/4.00.1/bin/ocamldep.opt -modules src/bson.ml > src/bson.ml.depends # cached
 # Target: src/bson.cmx, tags: { compile, extension:cmx, extension:ml, file:src/bson.cmx, file:src/bson.ml, implem, native, ocaml, quiet }
-/Users/iamindcs/.opam/4.00.1/bin/ocamlopt.opt -c -I src -o src/bson.cmx src/bson.ml # cached
+/home/xinuo/.opam/4.00.1/bin/ocamlopt.opt -c -I src -o src/bson.cmx src/bson.ml # cached
 # Target: test/test_bson.cmx, tags: { compile, extension:cmx, extension:ml, file:test/test_bson.cmx, file:test/test_bson.ml, implem, native, ocaml, quiet }
-/Users/iamindcs/.opam/4.00.1/bin/ocamlopt.opt -c -I test -I src -o test/test_bson.cmx test/test_bson.ml
+/home/xinuo/.opam/4.00.1/bin/ocamlopt.opt -c -I test -I src -o test/test_bson.cmx test/test_bson.ml
 # Target: test/test_bson.native, tags: { dont_link_with, extension:native, file:test/test_bson.native, link, native, ocaml, program, quiet }
-/Users/iamindcs/.opam/4.00.1/bin/ocamlopt.opt src/bson.cmx test/test_bson.cmx -o test/test_bson.native
+/home/xinuo/.opam/4.00.1/bin/ocamlopt.opt src/bson.cmx test/test_bson.cmx -o test/test_bson.native
 # Compilation successful.
