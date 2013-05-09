@@ -7,7 +7,7 @@ exception Malformed_bson;;
 
 type document = element StringMap.t
 and t = document
-and empty = 
+and special = 
   | NULL
   | MINKEY
   | MAXKEY
@@ -20,15 +20,15 @@ and element =
   | ObjectId of string (* only 12 bytes *)
   | Boolean of bool
   | UTC of int64
-  | Null of empty
+  | Null of special
   | Regex of (string * string)
   | JSCode of string
   | JSCodeWS of (string * document)
   | Int32 of int32
   | Int64 of int64
   | Timestamp of int64
-  | MinKey of empty
-  | MaxKey of empty
+  | MinKey of special
+  | MaxKey of special
 and binary =
   | Generic of string
   | Function of string
@@ -37,7 +37,7 @@ and binary =
   | UserDefined of string;;
 
   
-let make () = StringMap.empty;;
+let empty = StringMap.empty;;
 
 let is_empty = StringMap.is_empty;;
 
@@ -168,7 +168,7 @@ let list_to_doc l = (* we need to transform the list to a doc with key as increm
     | [] -> acc
     | hd::tl -> to_doc (i+1) (add_element (String.make 1 (Char.chr (i+48))) hd acc) tl
   in
-  to_doc 0 (make()) l;;
+  to_doc 0 empty l;;
 
 
 let encode doc =
@@ -382,7 +382,7 @@ let decode str =
     in 
     (ename, element, next_cur)
   and decode_doc str cur =
-    let acc = make () in
+    let acc = empty in
     let (len, next_cur) = decode_len str cur in
     let rec decode_elements cur acc =
       if str.[cur] = '\x00' then (acc, cur+1)

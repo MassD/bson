@@ -32,7 +32,7 @@ exception Malformed_bson;;
 type t;;
 
 (** The type for representing the special fields in Bson *)
-type empty = 
+type special = 
   | NULL 
   | MINKEY
   | MAXKEY;;
@@ -43,8 +43,8 @@ type element;;
 
 (** {6 Basic operations on Bson document} *)
 
-(** Create an empty Bson document *)
-val make : unit -> t;;
+(** The empty Bson document *)
+val empty : t;;
 
 (** Check whether this Bson document empty or not *)
 val is_empty: t -> bool;;
@@ -101,15 +101,15 @@ val get_user_binary : element -> string;;
 val get_objectId : element -> string;;
 val get_boolean : element -> bool;;
 val get_utc : element -> int64;;
-val get_null : element -> empty;;
+val get_null : element -> special;;
 val get_regex : element -> (string * string);;
 val get_jscode : element -> string;;
 val get_jscode_w_s : element -> (string * t);;
 val get_int32 : element -> int32;;
 val get_int64 : element -> int64;;
 val get_timestamp : element -> int64;;
-val get_minkey : element -> empty;;
-val get_maxkey : element -> empty;;
+val get_minkey : element -> special;;
+val get_maxkey : element -> special;;
 
 
 (** {6 Experimental. Convert a Bson document to Json.} *)

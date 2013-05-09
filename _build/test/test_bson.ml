@@ -4,7 +4,7 @@ let print_buffer s =
 
 let bin = "12345";;
 
-let doc0 = Bson.make ();;
+let doc0 = Bson.empty;;
 
 let _ = 
   print_string "doc0 is "; 
