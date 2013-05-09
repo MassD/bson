@@ -1,5 +1,5 @@
 name="bson"
 description="A bson data structure, including encoding/decoding"
-version="0.88.1"
+version="0.88.2"
 archive(byte)="bson.cmo"
 archive(native)="bson.cmx"
