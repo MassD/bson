@@ -15,7 +15,7 @@ The functions inside this module seem to be many, however, most of them are just
 
 ###Sample code
 
-    let doc = Bson.make ();;
+    let doc = Bson.empty;;
     let element = Bson.create_string "world";;
 	let new_doc = Bson.add_element "hello" element doc;;
     
@@ -42,7 +42,7 @@ If you want to directly use it as a library via ocamlfind, please do
 ###Misc
 Please also refer to the [Official Bson specification](http://bsonspec.org/#/specification) for more information.
 
-*Version 0.88.1* 
+*Version 0.88.2* 
 
 *Yes, I would like to call this utility as Bson.ml instead of ocamlbson, or something like that.* 
 
