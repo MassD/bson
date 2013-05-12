@@ -21,7 +21,13 @@ The functions inside this module seem to be many, however, most of them are just
     
     let encoded_bytes = Bson.encode new_doc;;
     let decoded_doc = Bson.decode encoded_bytes;;
-    
+
+###Prequistie
+
+Bson.ml does not use any external / 3rd party libraries. 
+
+However, `ocamlbuild` is recommended for the building job, though it is included in ocaml.
+
 ###Taste
 
 In order to taste Bson.ml, please have a look at test/test_bson.ml. 
@@ -42,7 +48,7 @@ If you want to directly use it as a library via ocamlfind, please do
 ###Misc
 Please also refer to the [Official Bson specification](http://bsonspec.org/#/specification) for more information.
 
-*Version 0.88.2* 
+*Version 0.88.3* 
 
 *Yes, I would like to call this utility as Bson.ml instead of ocamlbson, or something like that.* 
 
