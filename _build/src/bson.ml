@@ -299,9 +299,12 @@ let decode_string str cur =
     (*print_string "cur=";print_int cur;print_string ";";
       print_string "len=";print_int len;
       print_endline "";*)
-  let x00 = next_x00 str next_cur in
-  if len - 1 <> x00-next_cur then raise Wrong_string
-  else (String.sub str next_cur (len-1), x00+1);;
+  (*let x00 = next_x00 str next_cur in
+  Printf.printf "len=%d, next_cur=%d, x00=%d, s[x00]=%c\n" len next_cur x00 str.[x00-1];
+  print_endline (String.sub str next_cur (len-1));*)
+  (*if len - 1 <> x00-next_cur then raise Wrong_string
+  else (String.sub str next_cur (len-1), x00+1);;*)
+  (String.sub str next_cur (len-1), next_cur+len);;
 
 let doc_to_list doc = (* we need to transform a doc with key as incrementing from '0' to a list *)
   List.rev (StringMap.fold (fun k v acc -> v::acc) doc []);;
