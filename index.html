@@ -1,33 +1,36 @@
 <!DOCTYPE html>
 <html>
+
   <head>
-    <meta charset='utf-8'>
-    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta name="description" content="Bson.ml : A bson encoder / decoder in OCaml, built for MongoDB" />
 
-    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
-    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
-    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
 
-    <title>Bson.ml by MassD</title>
+    <title>Bson.ml</title>
   </head>
 
   <body>
 
-    <header>
-      <div class="container">
-        <h1>Bson.ml</h1>
-        <h2>bson ocaml mongodb </h2>
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/MassD/bson">View on GitHub</a>
 
-        <section id="downloads">
-          <a href="https://github.com/MassD/bson/zipball/master" class="btn">Download as .zip</a>
-          <a href="https://github.com/MassD/bson/tarball/master" class="btn">Download as .tar.gz</a>
-          <a href="https://github.com/MassD/bson" class="btn btn-github"><span class="icon"></span>View on GitHub</a>
-        </section>
-      </div>
-    </header>
+          <h1 id="project_title">Bson.ml</h1>
+          <h2 id="project_tagline">A bson encoder / decoder in OCaml, built for MongoDB</h2>
 
-    <div class="container">
-      <section id="main_content">
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/MassD/bson/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/MassD/bson/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
         <h1>Bson.ml</h1>
 
 <p><strong>Bson.ml</strong> is an ocaml implementation for MongoDB BSON protocol. </p>
@@ -59,6 +62,12 @@ let encoded_bytes = Bson.encode new_doc;;
 let decoded_doc = Bson.decode encoded_bytes;;
 </code></pre>
 
+<hr><h3>Prequistie</h3>
+
+<p>Bson.ml does not use any external / 3rd party libraries. </p>
+
+<p>However, <code>ocamlbuild</code> is recommended for the building job, though it is included in ocaml.</p>
+
 <hr><h3>Taste Bson.ml</h3>
 
 <p>In order to taste Bson.ml, please have a look at test/test_bson.ml. 
@@ -83,12 +92,20 @@ You can use the following command in the root of the project to run it:</p>
 
 <p>Please refer to <a href="http://stackoverflow.com/a/8665591/298143">this excellent answer</a> for more information about "how to let ocamlfind to find your lib"</p>
 
-<hr><p>The current version is 0.88.2</p>
+<hr><p>The current version is 0.88.3</p>
 
 <p>Yes, I would like to call this utility as Bson.ml instead of ocamlbson, or something like that.</p>
 
 <p>In addition, experienced ocaml developers are welcomed to improve the code base</p>
       </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">Bson.ml maintained by <a href="https://github.com/MassD">MassD</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
     </div>
 
               <script type="text/javascript">
@@ -101,6 +118,7 @@ You can use the following command in the root of the project to run it:</p>
             pageTracker._trackPageview();
             } catch(err) {}
           </script>
+
 
   </body>
 </html>
