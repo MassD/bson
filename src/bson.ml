@@ -143,9 +143,9 @@ let encode_ename buf c ename =
 
 let encode_string buf s =
   let len = String.length s in 
-  if s.[len-1] = '\x00' then raise Wrong_string
+  if len > 0 && s.[len-1] = '\x00' then raise Wrong_string
   else begin
-    encode_int32 buf (Int32.of_int ((String.length s) + 1));
+    encode_int32 buf (Int32.of_int (len+1));
     Buffer.add_string buf s;
     Buffer.add_char buf '\x00'
   end;;

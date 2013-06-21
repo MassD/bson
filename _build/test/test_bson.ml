@@ -16,6 +16,9 @@ let doc1 = Bson.add_element "Double" e1 doc0;;
 let e2 = Bson.create_string "string";;
 let doc2 = Bson.add_element "String" e2 doc1;;
 
+let e2_1 = Bson.create_string "";;
+let doc2_1 = Bson.add_element "String" e2 doc1;;
+
 let e3 = Bson.create_doc_element doc2;;
 let doc3 = Bson.add_element "Document" e3 doc2;;
 
