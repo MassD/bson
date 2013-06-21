@@ -31,7 +31,8 @@
     <!-- MAIN CONTENT -->
     <div id="main_content_wrap" class="outer">
       <section id="main_content" class="inner">
-        <h1>Bson.ml</h1>
+        <h1>
+<a name="bsonml" class="anchor" href="#bsonml"><span class="octicon octicon-link"></span></a>Bson.ml</h1>
 
 <p><strong>Bson.ml</strong> is an ocaml implementation for MongoDB BSON protocol. </p>
 
@@ -39,7 +40,8 @@
 
 <p>Here is its <a href="http://massd.github.io/bson/doc/Bson.html">api doc</a></p>
 
-<h3>Usage in a functional way</h3>
+<h3>
+<a name="usage-in-a-functional-way" class="anchor" href="#usage-in-a-functional-way"><span class="octicon octicon-link"></span></a>Usage in a functional way</h3>
 
 <p>The logic of <strong>usage</strong> is like this</p>
 
@@ -52,7 +54,8 @@
 <li>After obtaining an element, get the raw value from the element</li>
 </ol><p>The functions inside this module seem to be many, however, most of them are just for creating elements. These functions are to <em>hide the implementation details of the type elements</em>. Also, in this way, the Bson document can be used more safely.</p>
 
-<hr><h3>Sample code</h3>
+<hr><h3>
+<a name="sample-code" class="anchor" href="#sample-code"><span class="octicon octicon-link"></span></a>Sample code</h3>
 
 <pre><code>let doc = Bson.empty;;
 let element = Bson.create_string "world";;
@@ -62,13 +65,15 @@ let encoded_bytes = Bson.encode new_doc;;
 let decoded_doc = Bson.decode encoded_bytes;;
 </code></pre>
 
-<hr><h3>Prequistie</h3>
+<hr><h3>
+<a name="prequistie" class="anchor" href="#prequistie"><span class="octicon octicon-link"></span></a>Prequistie</h3>
 
 <p>Bson.ml does not use any external / 3rd party libraries. </p>
 
 <p>However, <code>ocamlbuild</code> is recommended for the building job, though it is included in ocaml.</p>
 
-<hr><h3>Taste Bson.ml</h3>
+<hr><h3>
+<a name="taste-bsonml" class="anchor" href="#taste-bsonml"><span class="octicon octicon-link"></span></a>Taste Bson.ml</h3>
 
 <p>In order to taste Bson.ml, please have a look at test/test_bson.ml. 
 You can use the following command in the root of the project to run it:</p>
@@ -77,7 +82,8 @@ You can use the following command in the root of the project to run it:</p>
 ./test_bson.native 
 </code></pre>
 
-<hr><h3>Ocamlfind support</h3>
+<hr><h3>
+<a name="ocamlfind-support" class="anchor" href="#ocamlfind-support"><span class="octicon octicon-link"></span></a>Ocamlfind support</h3>
 
 <p>The META file is supplied in the root of project. Also the _build folder is provided together with the source.</p>
 
@@ -86,13 +92,14 @@ You can use the following command in the root of the project to run it:</p>
 <pre><code>ocamlfind install bson META _build/src/bson.cmx _build/src/bson.cmo _build/src/bson.cmi _build/src/bson.o
 </code></pre>
 
-<hr><h3>Further information</h3>
+<hr><h3>
+<a name="further-information" class="anchor" href="#further-information"><span class="octicon octicon-link"></span></a>Further information</h3>
 
 <p>Please refer to the <a href="http://bsonspec.org/#/specification">Official Bson specification</a> for more information.</p>
 
 <p>Please refer to <a href="http://stackoverflow.com/a/8665591/298143">this excellent answer</a> for more information about "how to let ocamlfind to find your lib"</p>
 
-<hr><p>The current version is 0.88.3</p>
+<hr><p>The current version is 0.88.4</p>
 
 <p>Yes, I would like to call this utility as Bson.ml instead of ocamlbson, or something like that.</p>
 
