@@ -201,7 +201,7 @@ let encode doc =
 	encode_objectId buf v
       | Boolean v ->
 	encode_ename buf '\x08' ename;
-	Buffer.add_char buf (if v then '\x00' else '\x01')
+	Buffer.add_char buf (if v then '\x01' else '\x00')
       | UTC v ->
 	encode_ename buf '\x09' ename;
 	encode_int64 buf v
