@@ -12,3 +12,4 @@
 *.native
 DS_Store
 *.byte
+_build/
