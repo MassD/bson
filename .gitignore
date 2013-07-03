@@ -9,6 +9,8 @@
 *.ml#
 *.mli~
 *.mli#
+*.sh~
+*.md~
 *.native
 DS_Store
 *.byte
