@@ -1,0 +1,5 @@
+(* OASIS_START *)
+(* DO NOT EDIT (digest: e998772c26e6c2fb9e57a135f29044a1) *)
+Authors of bson.ml
+MassD http://massd.github.io/
+(* OASIS_STOP *)

@@ -1,0 +1,13 @@
+OASISFormat: 0.3
+Name:        bson.ml
+Version:     0.88.5
+Synopsis:    A bson data structure, including encoding/decoding
+Authors:     MassD http://massd.github.io/
+License:     GPL-3
+Plugins:     META (0.3), StdFiles (0.3), DevFiles (0.3)
+
+Library bson
+  Path:       src
+  BuildTools: ocamlbuild
+  Modules:    Bson
+  

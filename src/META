@@ -1,0 +1,11 @@
+# OASIS_START
+# DO NOT EDIT (digest: 228d8e404776f29e15f4e7cf9d7f3cdc)
+version = "0.88.5"
+description = "A bson data structure, including encoding/decoding"
+archive(byte) = "bson.cma"
+archive(byte, plugin) = "bson.cma"
+archive(native) = "bson.cmxa"
+archive(native, plugin) = "bson.cmxs"
+exists_if = "bson.cma"
+# OASIS_STOP
+

@@ -1,5 +1,0 @@
-name="bson"
-description="A bson data structure, including encoding/decoding"
-version="0.88.5"
-archive(byte)="bson.cmo"
-archive(native)="bson.cmx"
