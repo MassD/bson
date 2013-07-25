@@ -1,5 +1,5 @@
-(** 
-    This module includes a Bson document data structure, together with its encoding (to bytes) and decoding (from bytes). 
+(**
+    This module includes a Bson document data structure, together with its encoding (to bytes) and decoding (from bytes).
 
     The logic of {b usage} is like this
     - Create an empty Bson document
@@ -13,7 +13,7 @@
 
     Please refer to the {{: http://bsonspec.org/#/specification } Official Bson specification } for more information.
 
-    {e Version 0.88.0} 
+    {e Version 0.88.0}
 *)
 
 (** Raised when an objectId's length is not 12. see http://bsonspec.org/#/specification *)
@@ -32,8 +32,8 @@ exception Malformed_bson;;
 type t;;
 
 (** The type for representing the special fields in Bson *)
-type special = 
-  | NULL 
+type special =
+  | NULL
   | MINKEY
   | MAXKEY;;
 
@@ -111,6 +111,7 @@ val get_timestamp : element -> int64;;
 val get_minkey : element -> special;;
 val get_maxkey : element -> special;;
 
+val all_elements : t -> (string * element) list
 
 (** {6 Experimental. Convert a Bson document to Json.} *)
 
@@ -122,4 +123,3 @@ val to_simple_json : t -> string;;
     val create_uuid_binary : string -> element;;
     val create_md5_binary : string -> element;;
     val create_timestamp : int64 -> element;;*)
-

@@ -1,5 +1,5 @@
 (* OASIS_START *)
-(* DO NOT EDIT (digest: 95fba2858d061fab3be36280aca7ad80) *)
+(* DO NOT EDIT (digest: 1d6f9832f200fd5b3a8f524bb984c331) *)
 This is the INSTALL file for the bson.ml distribution.
 
 This package uses OASIS to generate its build system. See section OASIS for
@@ -11,6 +11,7 @@ Dependencies
 In order to compile this package, you will need:
 * ocaml
 * findlib
+* deriving-ocsigen for library bson.syntax
 
 Installing
 ==========

@@ -1,16 +1,13 @@
-# OASIS_START
-# DO NOT EDIT (digest: bc1e05bfc8b39b664f29dae8dbd3ebbb)
-
 SETUP = ocaml setup.ml
 
 build: setup.data
 	$(SETUP) -build $(BUILDFLAGS)
 
 doc: setup.data build
-	ocamldoc -html -d doc/ src/bson.mli
+	@ocamldoc -html -d doc/ src/bson.mli
 
 test: setup.data build
-	ocamlbuild -I src test/test_bson.native
+	@ocamlbuild -use-ocamlfind -package bson.syntax -package deriving-ocsigen -package deriving-ocsigen.syntax -I src test/test_bson.native
 
 all:
 	$(SETUP) -all $(ALLFLAGS)
@@ -24,15 +21,13 @@ uninstall: setup.data
 reinstall: setup.data
 	$(SETUP) -reinstall $(REINSTALLFLAGS)
 
-clean: 
+clean:
 	$(SETUP) -clean $(CLEANFLAGS)
 
-distclean: 
+distclean:
 	$(SETUP) -distclean $(DISTCLEANFLAGS)
 
 setup.data:
 	$(SETUP) -configure $(CONFIGUREFLAGS)
 
 .PHONY: build doc test all install uninstall reinstall clean distclean configure
-
-# OASIS_STOP
