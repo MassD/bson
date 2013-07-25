@@ -286,12 +286,6 @@ module Builder(Loc : Defs.Loc) = struct
         from_bson ;
       ]
 
-
-    method variant ctxt tname params constraints (_, tags) =
-      [
-        <:str_item< value f _ =  assert False >>
-      ]
-
     method variant ctxt tname params constraints (_, tags) =
       let mc no_expr with_expr =
         function
