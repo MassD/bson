@@ -7,11 +7,11 @@ exception Malformed_bson;;
 
 type document = element StringMap.t
 and t = document
-and special = 
+and special =
   | NULL
   | MINKEY
   | MAXKEY
-and element = 
+and element =
   | Double of float
   | String of string
   | Document of document
@@ -36,7 +36,7 @@ and binary =
   | MD5 of string
   | UserDefined of string;;
 
-  
+
 let empty = StringMap.empty;;
 
 let is_empty = StringMap.is_empty;;
@@ -71,7 +71,7 @@ let create_uuid_binary v = Binary (UUID v);;
 let create_md5_binary v = Binary (MD5 v);;
 let create_user_binary v = Binary (UserDefined v);;
 let is_valid_objectId objectId = if String.length objectId = 12 then true else false;;
-let create_objectId v = 
+let create_objectId v =
   if is_valid_objectId v then ObjectId v
   else raise Invalid_objectId;;
 let create_boolean v = Boolean v;;
@@ -130,19 +130,19 @@ let encode_int64 buf v =
 
 let encode_float buf v = encode_int64 buf (Int64.bits_of_float v);;
 
-let encode_int32 buf v = 
+let encode_int32 buf v =
   for i = 0 to 3 do
     let b = Int32.logand 255l (Int32.shift_right v (i*8)) in
     Buffer.add_char buf (Char.chr (Int32.to_int b))
   done;;
 
-let encode_ename buf c ename = 
-  Buffer.add_char buf c; 
-  Buffer.add_string buf ename; 
+let encode_ename buf c ename =
+  Buffer.add_char buf c;
+  Buffer.add_string buf ename;
   Buffer.add_char buf '\x00';;
 
 let encode_string buf s =
-  let len = String.length s in 
+  let len = String.length s in
   if len > 0 && s.[len-1] = '\x00' then raise Wrong_string
   else begin
     encode_int32 buf (Int32.of_int (len+1));
@@ -150,21 +150,21 @@ let encode_string buf s =
     Buffer.add_char buf '\x00'
   end;;
 
-let encode_objectId buf s = 
+let encode_objectId buf s =
   if String.length s <> 12 then raise Invalid_objectId
   else encode_string buf s;;
 
-let encode_binary buf c b = 
+let encode_binary buf c b =
   encode_int32 buf (Int32.of_int (String.length b));
   Buffer.add_char buf c;
   Buffer.add_string buf b;;
 
-let encode_cstring buf cs = 
-  Buffer.add_string buf cs; 
+let encode_cstring buf cs =
+  Buffer.add_string buf cs;
   Buffer.add_char buf '\x00';;
 
 let list_to_doc l = (* we need to transform the list to a doc with key as incrementing from '0' *)
-  let rec to_doc i acc = function 
+  let rec to_doc i acc = function
     | [] -> acc
     | hd::tl -> to_doc (i+1) (add_element (String.make 1 (Char.chr (i+48))) hd acc) tl
   in
@@ -173,15 +173,15 @@ let list_to_doc l = (* we need to transform the list to a doc with key as increm
 
 let encode doc =
   let all_buf = Buffer.create 64 in
-  let rec encode_element buf ename element = 
+  let rec encode_element buf ename element =
     match element with
-      | Double v -> 
+      | Double v ->
 	encode_ename buf '\x01' ename;
 	encode_float buf v
-      | String v -> 
+      | String v ->
 	encode_ename buf '\x02' ename;
 	encode_string buf v
-      | Document v -> 
+      | Document v ->
 	encode_ename buf '\x03' ename;
 	encode_doc buf v
       | Array v ->
@@ -195,8 +195,8 @@ let encode doc =
 	  | UUID v -> encode_binary buf '\x04' v
 	  | MD5 v -> encode_binary buf '\x05' v
 	  | UserDefined v -> encode_binary buf '\x80' v
-	end 
-      | ObjectId v -> 
+	end
+      | ObjectId v ->
 	encode_ename buf '\x07' ename;
 	encode_objectId buf v
       | Boolean v ->
@@ -222,13 +222,13 @@ let encode doc =
 	encode_int32 buf (Int32.of_int (4 + (Buffer.length tmp_str_buf) + (Buffer.length tmp_doc_buf)));
 	Buffer.add_buffer buf tmp_str_buf;
 	Buffer.add_buffer buf tmp_doc_buf
-      | Int32 v -> 
+      | Int32 v ->
 	encode_ename buf '\x10' ename;
 	encode_int32 buf v
-      | Timestamp v -> 
+      | Timestamp v ->
 	encode_ename buf '\x11' ename;
 	encode_int64 buf v
-      | Int64 v -> 
+      | Int64 v ->
 	encode_ename buf '\x12' ename;
 	encode_int64 buf v
       | MinKey MINKEY ->
@@ -236,15 +236,15 @@ let encode doc =
       | MaxKey MAXKEY ->
 	encode_ename buf '\x7F' ename
       | _ -> raise Malformed_bson
-  and 
-      encode_doc buf doc = 
+  and
+      encode_doc buf doc =
     let bindings = StringMap.bindings doc in
     let process_element buf (ename, element) = encode_element buf ename element; buf in
     let e_buf = List.fold_left process_element (Buffer.create 64) bindings in
     encode_int32 buf (Int32.of_int (5+(Buffer.length e_buf)));
     Buffer.add_buffer buf e_buf;
     Buffer.add_char buf '\x00';
-  in 
+  in
   encode_doc all_buf doc;
   Buffer.contents all_buf;;
 
@@ -257,15 +257,15 @@ let decode_int64 str cur =
       let high_byte = Char.code str.[i] in
       let high_int64 = Int64.of_int high_byte in
       let shift_acc = Int64.shift_left acc 8 in
-      let new_acc = Int64.logor high_int64 shift_acc in 
+      let new_acc = Int64.logor high_int64 shift_acc in
       decode (i-1) new_acc
   in (decode (cur+7) 0L, cur+8)
 
-let decode_float str cur = 
+let decode_float str cur =
   let (i, new_cur) = decode_int64 str cur in
   (Int64.float_of_bits i, new_cur);;
 
-let decode_int32 str cur = 
+let decode_int32 str cur =
   let rec decode i acc =
     if i < cur then acc
     else
@@ -273,13 +273,13 @@ let decode_int32 str cur =
 	(*print_int high_byte;print_endline "";*)
       let high_int32 = Int32.of_int high_byte in
       let shift_acc = Int32.shift_left acc 8 in
-      let new_acc = Int32.logor high_int32 shift_acc in 
+      let new_acc = Int32.logor high_int32 shift_acc in
       decode (i-1) new_acc
   in (decode (cur+3) 0l, cur+4);;
 
 let rec next_x00 str cur = String.index_from str cur '\x00';;
 
-let decode_ename str cur = 
+let decode_ename str cur =
   let x00 = next_x00 str cur in
   if x00 = -1 then raise Malformed_bson
   else (String.sub str cur (x00-cur), x00+1);;
@@ -290,7 +290,7 @@ let decode_len str cur =
   let (len32, next_cur) = decode_int32 str cur in
   (Int32.to_int len32, next_cur)
 
-let decode_double str cur = 
+let decode_double str cur =
   let (f, new_cur) = decode_float str cur in
   (Double f, new_cur);;
 
@@ -309,7 +309,7 @@ let decode_string str cur =
 let doc_to_list doc = (* we need to transform a doc with key as incrementing from '0' to a list *)
   List.rev (StringMap.fold (fun k v acc -> v::acc) doc []);;
 
-let decode_binary str cur = 
+let decode_binary str cur =
   let (len, next_cur) = decode_len str cur in
   let c = str.[next_cur] in
   let b = String.sub str (next_cur+1) len in
@@ -326,16 +326,16 @@ let decode_objectId str cur = (ObjectId (String.sub str cur 12), cur+12);;
 
 let decode_boolean str cur = (Boolean (if str.[cur] = '\x00' then false else true), cur+1);;
 
-let decode_utc str cur = 
+let decode_utc str cur =
   let (i, new_cur) = decode_int64 str cur in
   (UTC i, new_cur);;
 
-let decode_regex str cur = 
+let decode_regex str cur =
   let (s1, x00) = decode_cstring str cur in
   let (s2, new_cur) = decode_cstring str (x00+1) in
   (Regex (s1, s2), new_cur);;
 
-let decode_jscode str cur = 
+let decode_jscode str cur =
   let (s, next_cur) = decode_string str cur in
   (JSCode s, next_cur);;
 
@@ -343,19 +343,19 @@ let decode str =
   let rec decode_element str cur =
     let c = str.[cur] in
     let next_cur = cur+1 in
-    let (ename, next_cur) = decode_ename str next_cur in 
+    let (ename, next_cur) = decode_ename str next_cur in
       (*print_endline ename;*)
-    let (element, next_cur) = 
+    let (element, next_cur) =
       match c with
 	| '\x01' -> decode_double str next_cur
-	| '\x02' -> 
+	| '\x02' ->
 	    (*print_endline "decoding string...";*)
 	  let (s, next_cur) = decode_string str next_cur in
 	  (String s, next_cur)
-	| '\x03' -> 
+	| '\x03' ->
 	  let (doc, next_cur) = decode_doc str next_cur in
 	  (Document doc, next_cur)
-	| '\x04' -> 
+	| '\x04' ->
 	  let (doc, next_cur) =  decode_doc str next_cur in
 	  (Array (doc_to_list doc), next_cur)
 	| '\x05' -> decode_binary str next_cur
@@ -370,29 +370,29 @@ let decode str =
 	  let (s, next_cur) = decode_string str next_cur in
 	  let (doc, next_cur) = decode_doc str next_cur in
 	  (JSCodeWS (s, doc), next_cur)
-	| '\x10' -> 
+	| '\x10' ->
 	  let (i, next_cur) = decode_int32 str next_cur in
 	  (Int32 i, next_cur)
-	| '\x11' -> 
+	| '\x11' ->
 	  let (i, next_cur) = decode_int64 str next_cur in
 	  (Timestamp i, next_cur)
-	| '\x12' -> 
+	| '\x12' ->
 	  let (i, next_cur) = decode_int64 str next_cur in
 	  (Int64 i, next_cur)
 	| '\xFF' -> (MinKey MINKEY, next_cur)
 	| '\x7F' -> (MaxKey MAXKEY, next_cur)
 	| _ -> raise Malformed_bson
-    in 
+    in
     (ename, element, next_cur)
   and decode_doc str cur =
     let acc = empty in
     let (len, next_cur) = decode_len str cur in
     let rec decode_elements cur acc =
       if str.[cur] = '\x00' then (acc, cur+1)
-      else 
+      else
 	let (ename, element, next_cur) = decode_element str cur in
 	decode_elements next_cur (add_element ename element acc)
-    in 
+    in
     let (doc, des) = decode_elements next_cur acc in
     if des - cur <> len then raise Malformed_bson
     else (doc, des)
@@ -403,7 +403,7 @@ let decode str =
     It is used to help the test verification and can handle only simple objects.
   *)
 let to_simple_json doc =
-  let rec el_to_sl el = 
+  let rec el_to_sl el =
     List.rev (List.fold_left (fun acc e -> (e_to_s e)::acc) [] el)
   and e_to_s = function
     | Double v -> string_of_float v
@@ -413,7 +413,7 @@ let to_simple_json doc =
     | Binary v ->
       begin match v with
 	| Generic v | Function v | UUID v | MD5 v | UserDefined v -> "\"" ^ v ^ "\""
-      end 
+      end
     | ObjectId v -> "\"" ^ v ^ "\""
     | Boolean v -> if v then "\"true\"" else "\"false\""
     | UTC v -> Int64.to_string v
@@ -427,15 +427,15 @@ let to_simple_json doc =
     | MinKey MINKEY -> "\"minkey\""
     | MaxKey MAXKEY -> "\"maxkey\""
     | _ -> raise Malformed_bson
-  and d_to_s d = 
+  and d_to_s d =
     let buf = Buffer.create 16 in
     Buffer.add_string buf "{";
     let bindings = StringMap.bindings d in
-    let process acc (ename, element) = 
+    let process acc (ename, element) =
       ("\"" ^ ename ^ "\" : " ^ (e_to_s element)) :: acc;
-    in 
+    in
     Buffer.add_string buf (String.concat ", " (List.rev (List.fold_left process [] bindings)));
     Buffer.add_string buf "}";
     Buffer.contents buf
-  in 
+  in
   d_to_s doc;;

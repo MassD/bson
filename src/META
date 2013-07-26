@@ -1,0 +1,19 @@
+# OASIS_START
+# DO NOT EDIT (digest: 104cea0848213cec5eac428749180e62)
+version = "0.88.5"
+description = "A bson data structure, including encoding/decoding"
+archive(byte) = "bson.cma"
+archive(byte, plugin) = "bson.cma"
+archive(native) = "bson.cmxa"
+archive(native, plugin) = "bson.cmxs"
+exists_if = "bson.cma"
+package "syntax" (
+ version = "0.88.5"
+ description = "A bson data structure, including encoding/decoding"
+ requires = "camlp4"
+ archive(syntax, preprocessor) = "bson.syntax.cma"
+ archive(syntax, toploop) = "bson.syntax.cma"
+ exists_if = "bson.syntax.cma"
+)
+# OASIS_STOP
+

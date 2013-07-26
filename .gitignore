@@ -15,3 +15,7 @@
 DS_Store
 *.byte
 _build/
+
+setup.data
+setup.log
+_tags.*
