@@ -56,6 +56,13 @@ let add_element ename element doc = StringMap.add ename element doc;;
 *)
 let get_element ename doc = StringMap.find ename doc;;
 
+let has_element ename doc =
+  try
+    ignore(get_element ename doc);
+    true
+  with Not_found ->
+    false
+
 (*
   The remove  operations.
 *)

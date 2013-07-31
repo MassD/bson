@@ -49,11 +49,14 @@ val empty : t;;
 (** Check whether this Bson document empty or not *)
 val is_empty: t -> bool;;
 
-(** Create an empty Bson document *)
+(** Add an element to a Bson document *)
 val add_element : string -> element -> t -> t;;
 
 (** Get an element from a Bson document via its name *)
 val get_element : string -> t -> element;;
+
+(** Check whether this Bson document has a specific element **)
+val has_element : string -> t -> bool;;
 
 (** Remove an element from a Bson document *)
 val remove_element : string -> t -> t;;
