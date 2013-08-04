@@ -31,7 +31,7 @@ Library bson_client
   Findlibname: client
   FindlibParent: bson
   BuildTools: ocamlbuild
-  Modules: Bson_client,Bson_ext_client
+  Modules: Bson_ext_client
   BuildDepends: js_of_ocaml, js_of_ocaml.syntax
 
 Library bson_client_syntax
