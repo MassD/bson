@@ -3,6 +3,9 @@ SETUP = ocaml setup.ml
 build: setup.data
 	$(SETUP) -build $(BUILDFLAGS)
 
+client: setup.data.client
+	$(SETUP) -build $(BUILDFLAGS)
+
 doc: setup.data build
 	@ocamldoc -html -d doc/ src/bson.mli
 
@@ -29,5 +32,8 @@ distclean:
 
 setup.data:
 	$(SETUP) -configure $(CONFIGUREFLAGS)
+
+setup.data.client:
+	$(SETUP) -configure --enable-client $(CONFIGUREFLAGS)
 
 .PHONY: build doc test all install uninstall reinstall clean distclean configure

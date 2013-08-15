@@ -1,11 +1,9 @@
-module StringMap = Map.Make(struct type t = string let compare = compare end);;
-
 exception Invalid_objectId;;
 exception Wrong_bson_type;;
 exception Wrong_string;;
 exception Malformed_bson;;
 
-type document = element StringMap.t
+type document = (string * element) list
 and t = document
 and special =
   | NULL
@@ -37,9 +35,18 @@ and binary =
   | UserDefined of string;;
 
 
-let empty = StringMap.empty;;
+let empty = [];;
 
-let is_empty = StringMap.is_empty;;
+let is_empty = function
+  | [] -> true
+  | _ -> false;;
+
+let has_element = List.mem_assoc
+
+(*
+  The remove  operations.
+*)
+let remove_element = List.remove_assoc
 
 (*
   for constructing a document
@@ -47,26 +54,22 @@ let is_empty = StringMap.is_empty;;
   2. we create element as we want
   3. we add the element to the document, with a element name
 *)
-let add_element ename element doc = StringMap.add ename element doc;;
+let add_element ename element doc =
+  (* Emulating StringMap add operation *)
+  let doc =
+    if has_element ename doc then remove_element ename doc
+    else doc
+  in
+  (ename,element)::doc;;
 
 (*
   for using a document
   1. we get an element from document, if existing
   2. we get the value of the element
 *)
-let get_element ename doc = StringMap.find ename doc;;
+let get_element = List.assoc
 
-let has_element ename doc =
-  try
-    ignore(get_element ename doc);
-    true
-  with Not_found ->
-    false
 
-(*
-  The remove  operations.
-*)
-let remove_element ename doc = StringMap.remove ename doc;;
 
 let create_double v = Double v;;
 let create_string v = String v;;
@@ -115,7 +118,7 @@ let get_timestamp = function | Timestamp v -> v | _ -> raise Wrong_bson_type;;
 let get_minkey = function | MinKey MINKEY -> MINKEY | _ -> raise Wrong_bson_type;;
 let get_maxkey = function | MaxKey MAXKEY -> MAXKEY | _ -> raise Wrong_bson_type;;
 
-let all_elements doc = StringMap.bindings doc;;
+let all_elements d = d
 
   (*
     encode int64, int32 and float.
@@ -245,9 +248,8 @@ let encode doc =
       | _ -> raise Malformed_bson
   and
       encode_doc buf doc =
-    let bindings = StringMap.bindings doc in
     let process_element buf (ename, element) = encode_element buf ename element; buf in
-    let e_buf = List.fold_left process_element (Buffer.create 64) bindings in
+    let e_buf = List.fold_left process_element (Buffer.create 64) doc in
     encode_int32 buf (Int32.of_int (5+(Buffer.length e_buf)));
     Buffer.add_buffer buf e_buf;
     Buffer.add_char buf '\x00';
@@ -314,7 +316,10 @@ let decode_string str cur =
   (String.sub str next_cur (len-1), next_cur+len);;
 
 let doc_to_list doc = (* we need to transform a doc with key as incrementing from '0' to a list *)
-  List.rev (StringMap.fold (fun k v acc -> v::acc) doc []);;
+  List.map (
+    fun (k,v) -> v
+  ) doc
+
 
 let decode_binary str cur =
   let (len, next_cur) = decode_len str cur in
@@ -437,11 +442,11 @@ let to_simple_json doc =
   and d_to_s d =
     let buf = Buffer.create 16 in
     Buffer.add_string buf "{";
-    let bindings = StringMap.bindings d in
+    (* let bindings = all_elements d in *)
     let process acc (ename, element) =
       ("\"" ^ ename ^ "\" : " ^ (e_to_s element)) :: acc;
     in
-    Buffer.add_string buf (String.concat ", " (List.rev (List.fold_left process [] bindings)));
+    Buffer.add_string buf (String.concat ", " (List.rev (List.fold_left process [] d)));
     Buffer.add_string buf "}";
     Buffer.contents buf
   in

@@ -21,6 +21,7 @@
 &nbsp;&nbsp;<span class="keyword">val</span>&nbsp;is_empty&nbsp;:&nbsp;<span class="constructor">Bson</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;bool<br>
 &nbsp;&nbsp;<span class="keyword">val</span>&nbsp;add_element&nbsp;:&nbsp;string&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Bson</span>.element&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Bson</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Bson</span>.t<br>
 &nbsp;&nbsp;<span class="keyword">val</span>&nbsp;get_element&nbsp;:&nbsp;string&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Bson</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Bson</span>.element<br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;has_element&nbsp;:&nbsp;string&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Bson</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;bool<br>
 &nbsp;&nbsp;<span class="keyword">val</span>&nbsp;remove_element&nbsp;:&nbsp;string&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Bson</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Bson</span>.t<br>
 &nbsp;&nbsp;<span class="keyword">val</span>&nbsp;encode&nbsp;:&nbsp;<span class="constructor">Bson</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;string<br>
 &nbsp;&nbsp;<span class="keyword">val</span>&nbsp;decode&nbsp;:&nbsp;string&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Bson</span>.t<br>
@@ -61,5 +62,6 @@
 &nbsp;&nbsp;<span class="keyword">val</span>&nbsp;get_timestamp&nbsp;:&nbsp;<span class="constructor">Bson</span>.element&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int64<br>
 &nbsp;&nbsp;<span class="keyword">val</span>&nbsp;get_minkey&nbsp;:&nbsp;<span class="constructor">Bson</span>.element&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Bson</span>.special<br>
 &nbsp;&nbsp;<span class="keyword">val</span>&nbsp;get_maxkey&nbsp;:&nbsp;<span class="constructor">Bson</span>.element&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Bson</span>.special<br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;all_elements&nbsp;:&nbsp;<span class="constructor">Bson</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;(string&nbsp;*&nbsp;<span class="constructor">Bson</span>.element)&nbsp;list<br>
 &nbsp;&nbsp;<span class="keyword">val</span>&nbsp;to_simple_json&nbsp;:&nbsp;<span class="constructor">Bson</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;string<br>
 <span class="keyword">end</span></code></body></html>

@@ -311,19 +311,44 @@ module Builder(Loc : Defs.Loc) = struct
     let modules =
       List.map (
         fun t ->
-          let (name,_,_,_,_) = t in
-          <:str_item<
-            module $uid:("Bson_utils_" ^ name)$ =
-            struct
+          let (name,params,_,_,_) = t in
+
+          let functor_params =
+            List.fold_left (
+              fun m (name, _) ->
+                <:module_expr< $m$ ($uid:"M" ^ name$) >>
+            ) (<:module_expr< $uid:("Bson_ext_" ^ name) $>>) params
+          in
+
+          let body =
+            <:module_expr<
+              struct
               value to_bson t =
+                let module $uid:"Bson_ext_" ^ name$ = $functor_params$ in
                 let elt = $uid:("Bson_ext_" ^ name)$.to_bson t in
                 Bson.get_doc_element elt;
 
               value from_bson b =
+                let module $uid:"Bson_ext_" ^ name$ = $functor_params$ in
                 let elt = Bson.create_doc_element b in
                 $uid:("Bson_ext_" ^ name)$.from_bson elt;
 
-            end
+              end
+            >>
+          in
+
+          let body =
+            List.fold_right (
+              fun (name,_) body ->
+                <:module_expr<
+                  functor ($uid:("M" ^ name)$ : $uid:"Bson_ext"$.$uid:"Bson_ext"$)
+                  -> $body$
+                >>
+            ) params body
+          in
+
+          <:str_item<
+            module $uid:("Bson_utils_" ^ name)$ = $body$
           >>
       ) decls
     in
