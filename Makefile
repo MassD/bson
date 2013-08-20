@@ -3,6 +3,9 @@ SETUP = ocaml setup.ml
 build: setup.data
 	$(SETUP) -build $(BUILDFLAGS)
 
+syntax: setup.data.syntax
+	$(SETUP) -build $(BUILDFLAGS)
+
 client: setup.data.client
 	$(SETUP) -build $(BUILDFLAGS)
 
@@ -33,7 +36,10 @@ distclean:
 setup.data:
 	$(SETUP) -configure $(CONFIGUREFLAGS)
 
+setup.data.syntax:
+	$(SETUP) -configure --enable-syntax $(CONFIGUREFLAGS)
+
 setup.data.client:
-	$(SETUP) -configure --enable-client $(CONFIGUREFLAGS)
+	$(SETUP) -configure --enable-syntax --enable-client $(CONFIGUREFLAGS)
 
 .PHONY: build doc test all install uninstall reinstall clean distclean configure

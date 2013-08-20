@@ -1,6 +1,6 @@
 OASISFormat: 0.3
 Name:        bson.ml
-Version:     0.88.5
+Version:     0.89.0
 Synopsis:    A bson data structure, including encoding/decoding
 Authors:     MassD http://massd.github.io/
 License:     GPL-3
@@ -11,12 +11,17 @@ Library bson
   BuildTools: ocamlbuild
   Modules:    Bson,Bson_ext
 
+Flag syntax
+  Description: build the bson syntax extension
+  Default: false
+
 Library "bson.syntax"
+  Build$: flag(syntax)
+  Install$: flag(syntax)
   Path:       syntax
   BuildTools: ocamlbuild
   Modules:    Pa_bson
-  BuildDepends : camlp4.quotations.r,camlp4.metagenerator,camlp4.extend,deriving-ocsigen,js_of_ocaml.deriving.syntax
-  CompiledObject:     byte
+  BuildDepends : camlp4.quotations.r,camlp4.metagenerator,camlp4.extend,deriving-ocsigen,deriving-ocsigen.syntax
   XMETAType:          syntax
   XMETARequires:      camlp4
 
@@ -32,6 +37,7 @@ Library bson_client
   FindlibParent: bson
   BuildTools: ocamlbuild
   Modules: Bson_ext_client
+  CompiledObject:     byte
   BuildDepends: js_of_ocaml, js_of_ocaml.syntax
 
 Library bson_client_syntax
