@@ -13,7 +13,7 @@
 
     Please refer to the {{: http://bsonspec.org/#/specification } Official Bson specification } for more information.
 
-    {e Version 0.88.0}
+    {e Version 0.89.1}
 *)
 
 (** Raised when an objectId's length is not 12. see http://bsonspec.org/#/specification *)

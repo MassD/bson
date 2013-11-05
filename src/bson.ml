@@ -80,9 +80,22 @@ let create_function_binary v = Binary (Function v);;
 let create_uuid_binary v = Binary (UUID v);;
 let create_md5_binary v = Binary (MD5 v);;
 let create_user_binary v = Binary (UserDefined v);;
-let is_valid_objectId objectId = if String.length objectId = 12 then true else false;;
+let is_valid_objectId objectId = if String.length objectId = 12 || String.length objectId = 24 then true else false;;
+let hex_to_string s = 
+  let n = String.length s in
+  let buf = Buffer.create 12 in
+  let rec convert i =
+    if i > n-1 then Buffer.contents buf
+    else begin
+      Buffer.add_char buf (char_of_int (int_of_string ("0x" ^ (String.sub s i 2))));
+      convert (i+2)
+    end 
+  in 
+  convert 0
 let create_objectId v =
-  if is_valid_objectId v then ObjectId v
+  if String.length v = 12 then ObjectId v
+  else if String.length v = 24 then
+    try (ObjectId (hex_to_string v)) with (Failure "int_of_string") -> raise Invalid_objectId
   else raise Invalid_objectId;;
 let create_boolean v = Boolean v;;
 let create_utc v = UTC v;;

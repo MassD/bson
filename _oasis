@@ -1,6 +1,6 @@
 OASISFormat: 0.3
 Name:        bson.ml
-Version:     0.89.0
+Version:     0.89.1
 Synopsis:    A bson data structure, including encoding/decoding
 Authors:     MassD http://massd.github.io/
 License:     GPL-3
