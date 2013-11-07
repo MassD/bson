@@ -81,7 +81,7 @@ let create_uuid_binary v = Binary (UUID v);;
 let create_md5_binary v = Binary (MD5 v);;
 let create_user_binary v = Binary (UserDefined v);;
 let is_valid_objectId objectId = if String.length objectId = 12 || String.length objectId = 24 then true else false;;
-let hex_to_string s = 
+let hex_to_string s =
   let n = String.length s in
   let buf = Buffer.create 12 in
   let rec convert i =
@@ -89,8 +89,8 @@ let hex_to_string s =
     else begin
       Buffer.add_char buf (char_of_int (int_of_string ("0x" ^ (String.sub s i 2))));
       convert (i+2)
-    end 
-  in 
+    end
+  in
   convert 0
 let create_objectId v =
   if String.length v = 12 then ObjectId v
@@ -175,7 +175,7 @@ let encode_string buf s =
 
 let encode_objectId buf s =
   if String.length s <> 12 then raise Invalid_objectId
-  else encode_string buf s;;
+  else Buffer.add_string buf s;;
 
 let encode_binary buf c b =
   encode_int32 buf (Int32.of_int (String.length b));
@@ -269,7 +269,6 @@ let encode doc =
   in
   encode_doc all_buf doc;
   Buffer.contents all_buf;;
-
 
 
 let decode_int64 str cur =
