@@ -36,19 +36,47 @@ You can use the following command in the root of the project to run it:
 	ocamlbuild -I src test/test_bson.native
 	./test_bson.native 
 
-###Ocamlfind support
+###Install
+##### OPAM
 
-The META file is supplied in the root of project. Also the _build folder is provided together with the source.
+	opam install bson
 
-If you want to directly use it as a library via ocamlfind, please do
+##### From source
 
-	ocamlfind install bson META _build/src/bson.cmx _build/src/bson.cmo _build/src/bson.cmi _build/src/bson.o
+	make
+	make install
 
+
+###Bson.syntax
+
+Deriving syntax extension.
+
+	type t = {
+	  name = string;
+	  value = int;
+	} deriving (Bson_ext)
+
+generate Bson_utils_t.to_bson and Bson_utils_t.from_bson
+
+#####Example
+
+	let user = {
+	  name = "Joe"
+	  value = 5;
+	} deriving (Bson_ext);
+	
+	Mongo_lwt.insert mongo [ Bson_utils_t.to_bson user ];
+	(* ..... *)
+	let ds = MongoReply.get_document_list r in
+	List.fold_left (
+         fun acc d ->
+          (Bson_utils_t.from_bson d)::acc
+         ) acc ds
 
 ###Misc
 Please also refer to the [Official Bson specification](http://bsonspec.org/#/specification) for more information.
 
-*Version 0.88.5* 
+*Version 0.89.2* 
 
 *Yes, I would like to call this utility as Bson.ml instead of ocamlbson, or something like that.* 
 
