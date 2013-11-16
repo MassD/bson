@@ -75,6 +75,7 @@ let create_double v = Double v;;
 let create_string v = String v;;
 let create_doc_element v = Document v;;
 let create_list l = Array l;;
+let create_doc_element_list l = create_list (List.map create_doc_element l);;
 let create_generic_binary v = Binary (Generic v);;
 let create_function_binary v = Binary (Function v);;
 let create_uuid_binary v = Binary (UUID v);;
