@@ -190,7 +190,7 @@ let encode_cstring buf cs =
 let list_to_doc l = (* we need to transform the list to a doc with key as incrementing from '0' *)
   let rec to_doc i acc = function
     | [] -> acc
-    | hd::tl -> to_doc (i+1) (add_element (String.make 1 (Char.chr (i+48))) hd acc) tl
+    | hd::tl -> to_doc (i+1) (add_element (string_of_int i) hd acc) tl
   in
   to_doc 0 empty l;;
 
