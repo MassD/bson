@@ -1,6 +1,6 @@
 # OASIS_START
-# DO NOT EDIT (digest: 72266153eb5e3ffbd7e6bba11b38ffa9)
-version = "0.89.2"
+# DO NOT EDIT (digest: 6a384e288150c759a3f62bfc2b16d3aa)
+version = "0.89.3"
 description = "A bson data structure, including encoding/decoding"
 archive(byte) = "bson.cma"
 archive(byte, plugin) = "bson.cma"
@@ -8,27 +8,33 @@ archive(native) = "bson.cmxa"
 archive(native, plugin) = "bson.cmxs"
 exists_if = "bson.cma"
 package "syntax" (
- version = "0.89.2"
+ version = "0.89.3"
  description = "A bson data structure, including encoding/decoding"
  requires = "camlp4"
  archive(syntax, preprocessor) = "bson.syntax.cma"
  archive(syntax, toploop) = "bson.syntax.cma"
+ archive(syntax, byte) = "bson.syntax.cma"
+ archive(syntax, byte, plugin) = "bson.syntax.cma"
+ archive(syntax, native) = "bson.syntax.cmxa"
+ archive(syntax, native, plugin) = "bson.syntax.cmxs"
  exists_if = "bson.syntax.cma"
 )
 
 package "client" (
- version = "0.89.2"
+ version = "0.89.3"
  description = "A bson data structure, including encoding/decoding"
  requires = "js_of_ocaml js_of_ocaml.syntax"
  archive(byte) = "bson_client.cma"
  archive(byte, plugin) = "bson_client.cma"
  exists_if = "bson_client.cma"
  package "syntax" (
-  version = "0.89.2"
+  version = "0.89.3"
   description = "A bson data structure, including encoding/decoding"
   requires = "camlp4"
   archive(syntax, preprocessor) = "bson_client_syntax.cma"
   archive(syntax, toploop) = "bson_client_syntax.cma"
+  archive(syntax, byte) = "bson_client_syntax.cma"
+  archive(syntax, byte, plugin) = "bson_client_syntax.cma"
   exists_if = "bson_client_syntax.cma"
  )
 )
