@@ -1,10 +1,15 @@
 (* OASIS_START *)
-(* DO NOT EDIT (digest: 6fe1904f991c5700dec4a476c81dba70) *)
-This is the README file for the bson.ml distribution.
+(* DO NOT EDIT (digest: cc026be493225874d2ee3bf0ccd677c5) *)
 
-A bson data structure, including encoding/decoding
+bson.ml - A bson data structure, including encoding/decoding
+============================================================
 
-See the files INSTALL.txt for building and installation instructions. 
+See the file [INSTALL.txt](INSTALL.txt) for building and installation
+instructions.
 
+Copyright and license
+---------------------
+
+bson.ml is distributed under the terms of the MIT License.
 
 (* OASIS_STOP *)

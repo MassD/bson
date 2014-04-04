@@ -1,5 +1,5 @@
 # OASIS_START
-# DO NOT EDIT (digest: 6a384e288150c759a3f62bfc2b16d3aa)
+# DO NOT EDIT (digest: f100e98b116e60697c0bbeb1ba3c87e8)
 version = "0.89.3"
 description = "A bson data structure, including encoding/decoding"
 archive(byte) = "bson.cma"
@@ -13,10 +13,8 @@ package "syntax" (
  requires = "camlp4"
  archive(syntax, preprocessor) = "bson.syntax.cma"
  archive(syntax, toploop) = "bson.syntax.cma"
- archive(syntax, byte) = "bson.syntax.cma"
- archive(syntax, byte, plugin) = "bson.syntax.cma"
- archive(syntax, native) = "bson.syntax.cmxa"
- archive(syntax, native, plugin) = "bson.syntax.cmxs"
+ archive(syntax, preprocessor, native) = "bson.syntax.cmxa"
+ archive(syntax, preprocessor, native, plugin) = "bson.syntax.cmxs"
  exists_if = "bson.syntax.cma"
 )
 
@@ -33,8 +31,6 @@ package "client" (
   requires = "camlp4"
   archive(syntax, preprocessor) = "bson_client_syntax.cma"
   archive(syntax, toploop) = "bson_client_syntax.cma"
-  archive(syntax, byte) = "bson_client_syntax.cma"
-  archive(syntax, byte, plugin) = "bson_client_syntax.cma"
   exists_if = "bson_client_syntax.cma"
  )
 )

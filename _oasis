@@ -48,7 +48,7 @@ Library bson_client_syntax
   FindlibParent: bson_client
   BuildTools: ocamlbuild
   Modules: Pa_bson_client
-  BuildDepends: camlp4.quotations.r,camlp4.metagenerator,camlp4.extend,deriving,js_of_ocaml.deriving.syntax
+  BuildDepends: camlp4.quotations.r,camlp4.metagenerator,camlp4.extend,deriving,js_of_ocaml,deriving.syntax
   CompiledObject:     byte
   XMETAType:          syntax
   XMETARequires:      camlp4
