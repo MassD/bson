@@ -1,5 +1,5 @@
 (* OASIS_START *)
-(* DO NOT EDIT (digest: d6640da4a7fa83c96578f47567807516) *)
+(* DO NOT EDIT (digest: cc72152361f290b905ddcde7d187d8f3) *)
 
 This is the INSTALL file for the bson.ml distribution.
 
@@ -13,8 +13,7 @@ In order to compile this package, you will need:
 
 * ocaml
 * findlib
-* deriving for library bson.syntax, library bson_client_syntax
-* js_of_ocaml for library bson_client, library bson_client_syntax
+* deriving for library bson.syntax
 
 Installing
 ==========

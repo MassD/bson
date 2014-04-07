@@ -1,5 +1,5 @@
 # OASIS_START
-# DO NOT EDIT (digest: f100e98b116e60697c0bbeb1ba3c87e8)
+# DO NOT EDIT (digest: bced8295a7a624f31b092cf8d979d534)
 version = "0.89.3"
 description = "A bson data structure, including encoding/decoding"
 archive(byte) = "bson.cma"
@@ -16,23 +16,6 @@ package "syntax" (
  archive(syntax, preprocessor, native) = "bson.syntax.cmxa"
  archive(syntax, preprocessor, native, plugin) = "bson.syntax.cmxs"
  exists_if = "bson.syntax.cma"
-)
-
-package "client" (
- version = "0.89.3"
- description = "A bson data structure, including encoding/decoding"
- requires = "js_of_ocaml js_of_ocaml.syntax"
- archive(byte) = "bson_client.cma"
- archive(byte, plugin) = "bson_client.cma"
- exists_if = "bson_client.cma"
- package "syntax" (
-  version = "0.89.3"
-  description = "A bson data structure, including encoding/decoding"
-  requires = "camlp4"
-  archive(syntax, preprocessor) = "bson_client_syntax.cma"
-  archive(syntax, toploop) = "bson_client_syntax.cma"
-  exists_if = "bson_client_syntax.cma"
- )
 )
 # OASIS_STOP
 

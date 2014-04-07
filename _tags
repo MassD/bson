@@ -1,5 +1,5 @@
 # OASIS_START
-# DO NOT EDIT (digest: 71a352800545107b0a439693c0d913f6)
+# DO NOT EDIT (digest: 40280fa82e4491f8b0db2cd16cb32001)
 # Ignore VCS directories, you can use the same kind of rule outside
 # OASIS_START/STOP if you want to exclude directories that contains
 # useless stuff for the build process
@@ -22,18 +22,6 @@
 <syntax/*.ml{,i}>: pkg_camlp4.quotations.r
 <syntax/*.ml{,i}>: pkg_deriving
 <syntax/*.ml{,i}>: pkg_deriving.syntax
-# Library bson_client
-"client/src/bson_client.cmxs": use_bson_client
-<client/src/*.ml{,i}>: pkg_js_of_ocaml
-<client/src/*.ml{,i}>: pkg_js_of_ocaml.syntax
-# Library bson_client_syntax
-"client/syntax/bson_client_syntax.cmxs": use_bson_client_syntax
-<client/syntax/*.ml{,i}>: pkg_camlp4.extend
-<client/syntax/*.ml{,i}>: pkg_camlp4.metagenerator
-<client/syntax/*.ml{,i}>: pkg_camlp4.quotations.r
-<client/syntax/*.ml{,i}>: pkg_deriving
-<client/syntax/*.ml{,i}>: pkg_deriving.syntax
-<client/syntax/*.ml{,i}>: pkg_js_of_ocaml
 # OASIS_STOP
 <syntax/*.ml{,i}> or <test/*.ml{,i}>: syntax_camlp4o
 <client/syntax/*.ml{,i}> or <client/src/*.ml{,i}> or <test/*.ml{,i}>: syntax_camlp4o
