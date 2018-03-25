@@ -241,13 +241,7 @@ module OASISString = struct
       raise Not_found
 
 
-  let replace_chars f s =
-    let buf = String.make (String.length s) 'X' in
-      for i = 0 to String.length s - 1 do
-        buf.[i] <- f s.[i]
-      done;
-      buf
-
+  let replace_chars = String.map
 
 end
 
